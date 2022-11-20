@@ -45,6 +45,8 @@
 
 (message "[Prelude] Prelude is powering up... Be patient, Master %s!" prelude-user)
 
+(set-default-coding-systems 'utf-8)
+
 (when (version< emacs-version "25.1")
   (error "[Prelude] Prelude requires GNU Emacs 25.1 or newer, but you're running %s" emacs-version))
 
@@ -52,13 +54,15 @@
 (setq load-prefer-newer t)
 
 ;; Define Prelude's directory structure
-(defvar prelude-dir (file-name-directory load-file-name)
-  "The root dir of the Emacs Prelude distribution.")
-(defvar prelude-core-dir (expand-file-name "core" prelude-dir)
+(defvar prelude-dir (file-name-directory load-file-name))
+
+(defvar init-base-dir (file-name-directory load-file-name))
+
+(defvar prelude-core-dir (expand-file-name "core" init-base-dir)
   "The home of Prelude's core functionality.")
-(defvar prelude-modules-dir (expand-file-name  "modules" prelude-dir)
+(defvar prelude-modules-dir (expand-file-name  "modules" init-base-dir)
   "This directory houses all of the built-in Prelude modules.")
-(defvar prelude-personal-dir (expand-file-name "personal" prelude-dir)
+(defvar prelude-personal-dir (expand-file-name "personal" init-base-dir)
   "This directory is for your personal configuration.
 
 Users of Emacs Prelude are encouraged to keep their personal configuration
@@ -66,12 +70,15 @@ changes in this directory.  All Emacs Lisp files there are loaded automatically
 by Prelude.")
 (defvar prelude-personal-preload-dir (expand-file-name "preload" prelude-personal-dir)
   "This directory is for your personal configuration, that you want loaded before Prelude.")
-(defvar prelude-vendor-dir (expand-file-name "vendor" prelude-dir)
+(defvar prelude-vendor-dir (expand-file-name "vendor" init-base-dir)
   "This directory houses packages that are not yet available in ELPA (or MELPA).")
 (defvar prelude-savefile-dir (expand-file-name "savefile" user-emacs-directory)
   "This folder stores all the automatically generated save/history-files.")
 (defvar prelude-modules-file (expand-file-name "prelude-modules.el" prelude-personal-dir)
   "This file contains a list of modules that will be loaded by Prelude.")
+
+(defvar autoload-dir (expand-file-name "autoload" init-base-dir))
+
 
 (unless (file-exists-p prelude-savefile-dir)
   (make-directory prelude-savefile-dir))
@@ -89,6 +96,9 @@ by Prelude.")
 (add-to-list 'load-path prelude-core-dir)
 (add-to-list 'load-path prelude-modules-dir)
 (add-to-list 'load-path prelude-vendor-dir)
+(add-to-list 'load-path autoload-dir)
+
+;;(add-to-list 'load-path (expand-file-name "lisp" init-base-dir))
 (prelude-add-subfolders-to-load-path prelude-vendor-dir)
 
 ;; reduce the frequency of garbage collection by making it happen on
@@ -106,6 +116,7 @@ by Prelude.")
 (message "[Prelude] Loading Prelude's core modules...")
 
 ;; load the core stuff
+(require 'zo-packages)
 (require 'prelude-packages)
 (require 'prelude-custom)  ;; Needs to be loaded before core, editor and ui
 (require 'prelude-ui)
@@ -138,11 +149,16 @@ by Prelude.")
   (message "[Prelude] Missing personal modules file %s" prelude-modules-file)
   (message "[Prelude] Falling back to the bundled example file sample/prelude-modules.el")
   (message "[Prelude] You should copy this file to your personal configuration folder and tweak it to your liking")
-  (load (expand-file-name "sample/prelude-modules.el" prelude-dir)))
+  (load (expand-file-name "sample/prelude-modules.el" init-base-dir)))
 
 ;; config changes made through the customize UI will be stored here
 (setq custom-file (expand-file-name "custom.el" prelude-personal-dir))
 
+
+(defvar custom-dir (expand-file-name "custom" init-base-dir))
+(setq custom-file (concat user-emacs-directory "custom.el"))
+(when (file-exists-p custom-file)
+  (load custom-file))
 ;; load the personal settings (this includes `custom-file')
 (when (file-exists-p prelude-personal-dir)
   (message "[Prelude] Loading personal configuration files in %s..." prelude-personal-dir)
@@ -152,14 +168,9 @@ by Prelude.")
 
 (message "[Prelude] Prelude is ready to do thy bidding, Master %s!" prelude-user)
 
-;; Patch security vulnerability in Emacs versions older than 25.3
-(when (version< emacs-version "25.3")
-  (with-eval-after-load "enriched"
-    (defun enriched-decode-display-prop (start end &optional param)
-      (list start end))))
-
 (prelude-eval-after-init
  ;; greet the use with some useful tip
  (run-at-time 5 nil 'prelude-tip-of-the-day))
+(require 'auvertico-auto)
 
 ;;; init.el ends here

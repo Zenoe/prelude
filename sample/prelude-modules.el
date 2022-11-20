@@ -1,4 +1,4 @@
-;;; prelude-modules.el --- A listing of modules to load on startup
+﻿;;; prelude-modules.el --- A listing of modules to load on startup
 ;;
 ;; Copyright © 2011-2022 Bozhidar Batsov
 ;;
@@ -42,7 +42,7 @@
 ;;; General productivity tools
 
 ;; (require 'prelude-ido) ;; Supercharges Emacs completion for C-x C-f and more
-(require 'prelude-ivy) ;; A mighty modern alternative to ido
+(require 'zo-vertico) ;; A mighty modern alternative to ido
 ;; (require 'prelude-selectrum) ;; A powerful, yet simple, alternative to ivy
 ;; (require 'prelude-helm) ;; Interface for narrowing and search
 ;; (require 'prelude-helm-everywhere) ;; Enable Helm everywhere
@@ -52,7 +52,7 @@
 ;;; Vim emulation
 ;;
 ;; Enable this module if you're fond of vim's keybindings.
-;; (require 'prelude-evil)
+(require 'zo-evil)
 
 ;;; Org-mode (a legendary productivity tool that deserves its own category)
 ;;

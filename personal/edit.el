@@ -1,0 +1,5 @@
+;; (add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
+(modify-syntax-entry ?- "w" emacs-lisp-mode-syntax-table)
+(modify-syntax-entry ?_ "w" emacs-lisp-mode-syntax-table)
+(modify-syntax-entry ?_ "w" js-mode-syntax-table)
+(modify-syntax-entry ?_ "w" js2-mode-syntax-table)

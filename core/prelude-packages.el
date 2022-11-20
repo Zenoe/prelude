@@ -1,4 +1,4 @@
-;;; prelude-packages.el --- Emacs Prelude: default package selection.
+﻿;;; prelude-packages.el --- Emacs Prelude: default package selection.
 ;;
 ;; Copyright © 2011-2022 Bozhidar Batsov
 ;;
@@ -33,7 +33,6 @@
 ;;; Code:
 (require 'cl-lib)
 (require 'package)
-
 ;;;; Package setup and additional utility functions
 
 ;; accessing a package repo over https on Windows is a no go, so we
@@ -140,8 +139,7 @@ PACKAGE is installed only if not already present.  The file is opened in MODE."
                                  (,mode)))))
 
 (defvar prelude-auto-install-alist
-  '(("\\.adoc\\'" adoc-mode adoc-mode)
-    ("\\.clj\\'" clojure-mode clojure-mode)
+  '(("\\.clj\\'" clojure-mode clojure-mode)
     ("\\.cljc\\'" clojure-mode clojurec-mode)
     ("\\.cljs\\'" clojure-mode clojurescript-mode)
     ("\\.edn\\'" clojure-mode clojure-mode)
@@ -200,11 +198,6 @@ PACKAGE is installed only if not already present.  The file is opened in MODE."
 (when (package-installed-p 'markdown-mode)
   (add-to-list 'auto-mode-alist '("\\.markdown\\'" . gfm-mode))
   (add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode)))
-
-;; same with adoc-mode
-(when (package-installed-p 'adoc-mode)
-  (add-to-list 'auto-mode-alist '("\\.adoc\\'" . adoc-mode))
-  (add-to-list 'auto-mode-alist '("\\.asciidoc\\'" . adoc-mode)))
 
 ;; and pkgbuild-mode
 (when (package-installed-p 'pkgbuild-mode)

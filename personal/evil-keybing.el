@@ -1,0 +1,69 @@
+;; set leader key in normal state
+(require 'general)
+(require 'evil)
+
+(global-set-key (kbd "C-s") 'force-normal-n-save)
+(defun doom/escape (&optional interactive)
+  "Run `doom-escape-hook'."
+  (interactive (list 'interactive))
+  (cond ((minibuffer-window-active-p (minibuffer-window))
+         ;; quit the minibuffer if open.
+         (when interactive
+           (setq this-command 'abort-recursive-edit))
+         (abort-recursive-edit))
+        ;; Run all escape hooks. If any returns non-nil, then stop there.
+        ((run-hook-with-args-until-success 'doom-escape-hook))
+        ;; don't abort macros
+        ((or defining-kbd-macro executing-kbd-macro) nil)
+        ;; Back to the default
+        ((unwind-protect (keyboard-quit)
+           (when interactive
+             (setq this-command 'keyboard-quit))))))
+
+(global-set-key [remap keyboard-quit] #'doom/escape)
+(define-key evil-normal-state-map [escape] #'doom/escape)
+
+(defvar doom-leader-map (make-sparse-keymap)
+  "An overriding keymap for <leader> keys.")
+
+(define-prefix-command 'doom/leader 'doom-leader-map)
+(define-key doom-leader-map [override-state] 'all)
+(defvar doom-leader-key "SPC"
+  "The leader prefix key for Evil users.")
+(defvar doom-leader-alt-key "M-SPC"
+  "An alternative leader prefix key, used for Insert and Emacs states, and for
+non-evil users.")
+
+;; Bind `doom-leader-key' and `doom-leader-alt-key' as late as possible to give
+;; the user a chance to modify them.
+(defun doom-init-leader-keys-h ()
+    "Bind `doom-leader-key' and `doom-leader-alt-key'."
+    (let ((map general-override-mode-map))
+      (if (not (featurep 'evil))
+          (progn
+            (cond ((equal doom-leader-alt-key "C-c")
+                   (set-keymap-parent doom-leader-map mode-specific-map))
+                  ((equal doom-leader-alt-key "C-x")
+                   (set-keymap-parent doom-leader-map ctl-x-map)))
+            (define-key map (kbd doom-leader-alt-key) 'doom/leader))
+        (evil-define-key* '(normal visual motion) map (kbd doom-leader-key) 'doom/leader)
+        (evil-define-key* '(emacs insert) map (kbd doom-leader-alt-key) 'doom/leader))
+      (general-override-mode +1)))
+
+(add-hook 'after-init-hook #'doom-init-leader-keys-h)
+;; (evil-set-leader 'normal (kbd "SPC"))
+;; (defvar my-leader-map (make-sparse-keymap)
+;;   "Keymap for \"leader key\" shortcuts.")
+;; (define-key evil-normal-state-map "," 'evil-repeat-find-char-reverse)
+;; (define-key evil-normal-state-map (kbd "SPC") my-leader-map)
+
+;; (define-key doom-leader-map "b" 'list-buffers)
+
+(evil-define-key nil doom-leader-map
+  " " 'projectile-find-file
+  "fr" 'consult-recent-file
+  "bb" 'projectile-switch-to-buffer
+  "." 'find-file
+  "ha" 'consult-apropos
+  ";" 'evil-switch-to-windows-last-buffer
+)
