@@ -145,7 +145,7 @@
   (setq evil-want-keybinding nil)
   (setq evil-want-C-u-scroll t)
   (setq evil-want-C-i-jump nil)
-  (setq evil-want-Y-yank-to-eo t)
+  (setq evil-want-Y-yank-to-eol t)
   (setq evil-esc-delay 0)
   (setq evil-respect-visual-line-mode t)
   (setq evil-undo-system 'undo-tree)
@@ -190,4 +190,9 @@
   (global-evil-visualstar-mode)
   )
 
+(use-package evil-goggles
+  :after evil
+  :config
+  (evil-goggles-mode t)
+  )
 (provide 'zo-evil)

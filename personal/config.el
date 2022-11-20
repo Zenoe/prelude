@@ -26,6 +26,20 @@
 ;; (smartparens-strict-mode -1)
 (smartparens-global-strict-mode -1)
 
+;; delete file without prompts
+;; (advice-add 'dired-delete-file :before
+;;             (lambda (file &rest rest)
+;;               (when-let ((buf (get-file-buffer file)))
+;;                 (kill-buffer buf))))
+
+;; delete without prompting for kill buffer
+;; (defadvice dired-delete-entry (before force-clean-up-buffers (file) activate)
+;;   (kill-buffer (get-file-buffer file)))
+(setq dired-clean-confirm-killing-deleted-buffers nil)
+
+;; Auto-refresh dired on file change
+(add-hook 'dired-mode-hook 'auto-revert-mode)
+
 (setq make-backup-files nil) ; stop creating backup~ files
 (setq auto-save-default nil) ; stop creating #autosave# files
 

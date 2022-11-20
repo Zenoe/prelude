@@ -1,6 +1,7 @@
 ;; set leader key in normal state
 (require 'general)
 (require 'evil)
+(load "myloaddefs")
 
 (global-set-key (kbd "C-s") 'force-normal-n-save)
 (defun doom/escape (&optional interactive)
@@ -66,4 +67,5 @@ non-evil users.")
   "." 'find-file
   "ha" 'consult-apropos
   ";" 'evil-switch-to-windows-last-buffer
+  "/" '+default/search-project
 )

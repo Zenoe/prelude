@@ -97,6 +97,7 @@ by Prelude.")
 (add-to-list 'load-path prelude-modules-dir)
 (add-to-list 'load-path prelude-vendor-dir)
 (add-to-list 'load-path autoload-dir)
+(add-to-list 'load-path (expand-file-name "search" init-base-dir))
 
 ;;(add-to-list 'load-path (expand-file-name "lisp" init-base-dir))
 (prelude-add-subfolders-to-load-path prelude-vendor-dir)
@@ -171,6 +172,5 @@ by Prelude.")
 (prelude-eval-after-init
  ;; greet the use with some useful tip
  (run-at-time 5 nil 'prelude-tip-of-the-day))
-(require 'auvertico-auto)
 
 ;;; init.el ends here
