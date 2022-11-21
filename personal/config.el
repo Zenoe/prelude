@@ -50,5 +50,5 @@
 (setq help-window-select t)
 ;; (define-key global-map [remap list-buffers] 'buffer-menu-other-window)
 
-(add-to-list 'savehist-additional-variables 'extended-command-history)
-(add-to-list 'savehist-additional-variables 'command-history)
+;; (add-to-list 'savehist-additional-variables 'extended-command-history)
+;; (add-to-list 'savehist-additional-variables 'command-history)

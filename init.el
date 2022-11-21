@@ -70,8 +70,6 @@ changes in this directory.  All Emacs Lisp files there are loaded automatically
 by Prelude.")
 (defvar prelude-personal-preload-dir (expand-file-name "preload" prelude-personal-dir)
   "This directory is for your personal configuration, that you want loaded before Prelude.")
-(defvar prelude-vendor-dir (expand-file-name "vendor" init-base-dir)
-  "This directory houses packages that are not yet available in ELPA (or MELPA).")
 (defvar prelude-savefile-dir (expand-file-name "savefile" user-emacs-directory)
   "This folder stores all the automatically generated save/history-files.")
 (defvar prelude-modules-file (expand-file-name "prelude-modules.el" prelude-personal-dir)
@@ -95,12 +93,10 @@ by Prelude.")
 ;; add Prelude's directories to Emacs's `load-path'
 (add-to-list 'load-path prelude-core-dir)
 (add-to-list 'load-path prelude-modules-dir)
-(add-to-list 'load-path prelude-vendor-dir)
 (add-to-list 'load-path autoload-dir)
 (add-to-list 'load-path (expand-file-name "search" init-base-dir))
 
 ;;(add-to-list 'load-path (expand-file-name "lisp" init-base-dir))
-(prelude-add-subfolders-to-load-path prelude-vendor-dir)
 
 ;; reduce the frequency of garbage collection by making it happen on
 ;; each 50MB of allocated data (the default is on every 0.76MB)

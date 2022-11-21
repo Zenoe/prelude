@@ -1,3 +1,4 @@
+(require 'zo-edit)
 (setq create-lockfiles nil
       make-backup-files nil
       ;; But in case the user does enable it, some sensible defaults:

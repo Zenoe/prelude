@@ -1,33 +1,4 @@
 ﻿;;; prelude-evil.el --- Emacs Prelude: evil-mode configuration.
-;;
-;; Copyright © 2011-2022 Bozhidar Batsov
-;;
-;; Author: Bozhidar Batsov <bozhidar@batsov.com>
-;; URL: https://github.com/bbatsov/prelude
-
-;; This file is not part of GNU Emacs.
-
-;;; Commentary:
-
-;; Some basic configuration for evil-mode.
-
-;;; License:
-
-;; This program is free software; you can redistribute it and/or
-;; modify it under the terms of the GNU General Public License
-;; as published by the Free Software Foundation; either version 3
-;; of the License, or (at your option) any later version.
-;;
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-;;
-;; You should have received a copy of the GNU General Public License
-;; along with GNU Emacs; see the file COPYING.  If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
-
 ;;; Code:
 
 ;;; goto-chg lets you use the g-; and g-, to go to recent changes
@@ -35,7 +6,6 @@
 ;;; evil-numbers enables vim style numeric incrementing and decrementing
 
 (global-set-key (kbd "C-M-u") 'universal-argument)
-
 
 ;; (prelude-require-packages '(goto-chg evil-surround evil-visualstar evil-numbers))
 
@@ -79,6 +49,8 @@
 ;;; snagged from Eric S. Fraga
 ;;; http://lists.gnu.org/archive/html/emacs-orgmode/2012-05/msg00153.html
 
+(defun current-line-empty-p ()
+  (string-match-p "\\`\\s-*$" (thing-at-point 'line)))
 
 (with-eval-after-load 'evil
   (defun prelude-shift-left-visual ()
@@ -132,9 +104,21 @@
                   term-mode))
   (add-to-list 'evil-emacs-state-modes mode)))
 
-(defun dw/dont-arrow-me-bro ()
+(defun force-normal-n-save ()
   (interactive)
-  (message "Arrow keys are bad, you know?"))
+  (evil-force-normal-state)
+  (save-buffer)
+  )
+
+(defun yank-and-indent ()
+  "Yank and then indent the newly formed region according to mode."
+  (interactive)
+  (unless ( current-line-empty-p )
+    (evil-open-below 1)
+    )
+  (yank)
+  (evil-force-normal-state)
+  (call-interactively 'indent-region))
 
 (use-package undo-tree
   :init
@@ -151,10 +135,14 @@
   (setq evil-undo-system 'undo-tree)
   :config
   (add-hook 'evil-mode-hook 'dw/evil-hook)
+  (evil-select-search-module 'evil-search-module 'evil-search)
   (evil-mode 1)
   (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
   (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
   (define-key evil-normal-state-map (kbd "zx") 'kill-current-buffer)
+  (define-key evil-normal-state-map (kbd "zp") 'yank-and-indent)
+  (define-key evil-insert-state-map (kbd "M-;") 'yank)
+
   ;; Use visual line motions even outside of visual-line-mode buffers
   (evil-global-set-key 'motion "j" 'evil-next-visual-line)
   (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
@@ -195,4 +183,5 @@
   :config
   (evil-goggles-mode t)
   )
+
 (provide 'zo-evil)

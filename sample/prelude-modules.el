@@ -52,8 +52,6 @@
 ;;; Vim emulation
 ;;
 ;; Enable this module if you're fond of vim's keybindings.
-(require 'zo-evil)
-
 ;;; Org-mode (a legendary productivity tool that deserves its own category)
 ;;
 ;; Org-mode helps you keep TODO lists, notes and more.
@@ -99,6 +97,9 @@
 
 ;;; Misc
 (require 'prelude-erc) ;; A popular Emacs IRC client (useful if you're still into Freenode)
+
+(require 'zo-evil)
+(require 'zo-perspective)
 
 (provide 'prelude-modules)
 ;;; prelude-modules.el ends here

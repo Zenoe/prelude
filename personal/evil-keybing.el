@@ -68,4 +68,6 @@ non-evil users.")
   "ha" 'consult-apropos
   ";" 'evil-switch-to-windows-last-buffer
   "/" '+default/search-project
+  "*" '+default/search-project-for-symbol-at-point
+  "'" 'vertico-repeat
 )

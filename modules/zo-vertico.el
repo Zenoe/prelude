@@ -32,7 +32,7 @@ folder, otherwise delete a word"
   :init
   (vertico-mode))
 
-(defun dw/get-project-root ()
+(defun dw/get-pcurrent-minibuffer-commandroject-root ()
   (when (fboundp 'projectile-project-root)
     (projectile-project-root)))
 
