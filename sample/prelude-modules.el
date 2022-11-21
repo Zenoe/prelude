@@ -42,7 +42,6 @@
 ;;; General productivity tools
 
 ;; (require 'prelude-ido) ;; Supercharges Emacs completion for C-x C-f and more
-(require 'zo-vertico) ;; A mighty modern alternative to ido
 ;; (require 'prelude-selectrum) ;; A powerful, yet simple, alternative to ivy
 ;; (require 'prelude-helm) ;; Interface for narrowing and search
 ;; (require 'prelude-helm-everywhere) ;; Enable Helm everywhere
@@ -98,6 +97,8 @@
 ;;; Misc
 (require 'prelude-erc) ;; A popular Emacs IRC client (useful if you're still into Freenode)
 
+(require 'zo-tool)
+(require 'zo-vertico) ;; A mighty modern alternative to ido
 (require 'zo-evil)
 (require 'zo-perspective)
 
