@@ -1,5 +1,4 @@
-(use-package pcre2el
-  )
+(prelude-require-packages '(xclip general ripgrep pcre2el))
 
 (defun update-all-autoloads ()
   (interactive)
@@ -13,5 +12,13 @@
         (save-buffer)))
     (mapcar #'update-directory-autoloads
             '("lisp" "search"))))
+
+(defun set-proxy()
+  (interactive)
+  (setq url-proxy-services
+        '(("no_proxy" . "^\\(localhost\\|10\\..*\\|192\\.168\\..*\\)")
+          ("http" . "127.0.0.1:7890")
+          ("https" . "127.0.0.1:7890")))
+  )
 
 (provide 'zo-tool)

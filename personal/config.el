@@ -17,11 +17,6 @@
 
 (menu-bar-mode -1)
 
-(global-undo-tree-mode)
-
-(require 'evil)
-(evil-set-undo-system 'undo-tree)
-
 (require 'smartparens)
 ;; (smartparens-strict-mode -1)
 (smartparens-global-strict-mode -1)

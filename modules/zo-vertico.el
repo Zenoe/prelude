@@ -1,6 +1,4 @@
-﻿(require 'use-package)
-
-(defvar +vertico-consult-fd-args nil
+﻿(defvar +vertico-consult-fd-args nil
   "Shell command and arguments the vertico module uses for fd.")
 
 (defvar doom-projectile-fd-binary
@@ -16,20 +14,29 @@ folder, otherwise delete a word"
       (if (string-match-p "/." (minibuffer-contents))
           (zap-up-to-char (- arg) ?/)
         (delete-minibuffer-contents))
-      (backward-kill-word arg)))
+    (backward-kill-word arg)))
 
 (use-package vertico
   :bind (:map vertico-map
-         ("C-j" . vertico-next)
-         ("C-k" . vertico-previous)
-         ("C-f" . vertico-exit)
-         :map minibuffer-local-map
-         ("M-h" . dw/minibuffer-backward-kill))
+              ("C-j" . vertico-next)
+              ("C-k" . vertico-previous)
+              ("C-f" . vertico-exit)
+              :map minibuffer-local-map
+              ("M-h" . dw/minibuffer-backward-kill))
   :custom
   (vertico-cycle t)
   :custom-face
   (vertico-current ((t (:background "#3a3f5a"))))
   :init
+  (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
+  (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
+  :config
+  (setq-default completion-in-region-function
+                (lambda (&rest args)
+                  (apply (if vertico-mode
+                             #'consult-completion-in-region
+                           #'completion--in-region)
+                         args)))
   (vertico-mode))
 
 (defun dw/get-pcurrent-minibuffer-commandroject-root ()

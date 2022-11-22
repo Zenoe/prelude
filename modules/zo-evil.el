@@ -102,7 +102,7 @@
                   circe-query-mode
                   sauron-mode
                   term-mode))
-  (add-to-list 'evil-emacs-state-modes mode)))
+    (add-to-list 'evil-emacs-state-modes mode)))
 
 (defun force-normal-n-save ()
   (interactive)
@@ -120,10 +120,36 @@
   (evil-force-normal-state)
   (call-interactively 'indent-region))
 
-(use-package undo-tree
-  :init
-  (global-undo-tree-mode 1))
+(use-package undo-fu
+  :config
+  (global-unset-key (kbd "C-z"))
+  (global-set-key (kbd "C-z")   'undo-fu-only-undo)
+  (global-set-key (kbd "C-S-z") 'undo-fu-only-redo))
+
 (use-package evil
+  :preface
+  (setq evil-ex-search-vim-style-regexp t
+        evil-ex-visual-char-range t  ; column range for ex commands
+        evil-mode-line-format 'nil
+        ;; more vim-like behavior
+        evil-symbol-word-search t
+        ;; if the current state is obvious from the cursor's color/shape, then
+        ;; we won't need superfluous indicators to do it instead.
+        evil-default-cursor '+evil-default-cursor-fn
+        evil-normal-state-cursor 'box
+        evil-emacs-state-cursor  '(box +evil-emacs-cursor-fn)
+        evil-insert-state-cursor 'bar
+        evil-visual-state-cursor 'hollow
+        ;; Only do highlighting in selected window so that Emacs has less work
+        ;; to do highlighting them all.
+        evil-ex-interactive-search-highlight 'selected-window
+        ;; It's infuriating that innocuous "beginning of line" or "end of line"
+        ;; errors will abort macros, so suppress them:
+        evil-kbd-macro-suppress-motion-error t
+        evil-undo-system
+        (cond ((bound-and-true-p undo-tree-mode) 'undo-tree)
+              ((package-installed-p 'undo-fu) 'undo-fu)
+              ((> emacs-major-version 27) 'undo-redo)))
   :init
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
@@ -132,7 +158,6 @@
   (setq evil-want-Y-yank-to-eol t)
   (setq evil-esc-delay 0)
   (setq evil-respect-visual-line-mode t)
-  (setq evil-undo-system 'undo-tree)
   :config
   (add-hook 'evil-mode-hook 'dw/evil-hook)
   (evil-select-search-module 'evil-search-module 'evil-search)
@@ -180,8 +205,16 @@
 
 (use-package evil-goggles
   :after evil
+  :init
+  (setq evil-goggles-duration 0.1
+        evil-goggles-pulse nil ; too slow
+        ;; evil-goggles provides a good indicator of what has been affected.
+        ;; delete/change is obvious, so I'd rather disable it for these.
+        evil-goggles-enable-delete nil
+        evil-goggles-enable-change nil)
   :config
   (evil-goggles-mode t)
-  )
+ )
+
 
 (provide 'zo-evil)

@@ -359,13 +359,13 @@ indent yanked text (with prefix arg don't indent)."
 (prelude-mode t)
 
 ;; supercharge your undo/redo with undo-tree
-(require 'undo-tree)
-;; autosave the undo-tree history
-(setq undo-tree-history-directory-alist
-      `((".*" . ,temporary-file-directory)))
-(setq undo-tree-auto-save-history t)
-(global-undo-tree-mode)
-(diminish 'undo-tree-mode)
+;; (require 'undo-tree)
+;; ;; autosave the undo-tree history
+;; (setq undo-tree-history-directory-alist
+;;       `((".*" . ,temporary-file-directory)))
+;; (setq undo-tree-auto-save-history t)
+;; (global-undo-tree-mode)
+;; (diminish 'undo-tree-mode)
 
 ;; enable winner-mode to manage window configurations
 (winner-mode +1)
