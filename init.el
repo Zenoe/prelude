@@ -9,7 +9,6 @@
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
                                         ;(package-initialize)
-
 (defconst IS-MAC      (eq system-type 'darwin))
 (defconst IS-LINUX    (memq system-type '(gnu gnu/linux gnu/kfreebsd berkeley-unix)))
 (defconst IS-WINDOWS  (memq system-type '(cygwin windows-nt ms-dos)))

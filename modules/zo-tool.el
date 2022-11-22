@@ -1,4 +1,4 @@
-(prelude-require-packages '(xclip general ripgrep pcre2el))
+(prelude-require-packages '(general ripgrep pcre2el))
 
 (defun update-all-autoloads ()
   (interactive)

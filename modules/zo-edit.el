@@ -13,6 +13,7 @@
   (general-def 'normal help-mode-map
     "o"       #'link-hint-open-link)
   )
+
 (modify-syntax-entry ?- "w" emacs-lisp-mode-syntax-table)
 (modify-syntax-entry ?_ "w" emacs-lisp-mode-syntax-table)
 (modify-syntax-entry ?_ "w" js-mode-syntax-table)

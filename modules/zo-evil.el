@@ -162,24 +162,29 @@
   (add-hook 'evil-mode-hook 'dw/evil-hook)
   (evil-select-search-module 'evil-search-module 'evil-search)
   (evil-mode 1)
-  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
-  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
-  (define-key evil-normal-state-map (kbd "zx") 'kill-current-buffer)
-  (define-key evil-normal-state-map (kbd "zp") 'yank-and-indent)
-  (define-key evil-insert-state-map (kbd "M-;") 'yank)
 
-  ;; Use visual line motions even outside of visual-line-mode buffers
-  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
-  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+  (general-def 'insert
+    "M-;" 'yank
+    "C-h" 'evil-delete-backward-char-and-join
+    )
+  (general-def 'normal
+    "zx" 'kill-current-buffer
+    "zp" 'yank-and-indent
+    "gc" 'comment-line
+    "SPC gw" 'avy-goto-word-1
+  )
 
-  (setq evil-shift-width 2)
+;; Use visual line motions even outside of visual-line-mode buffers
+(evil-global-set-key 'motion "j" 'evil-next-visual-line)
+(evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+(setq evil-shift-width 2)
 
   ;;; enable avy with evil-mode
-  (define-key evil-normal-state-map (kbd "SPC gw") 'avy-goto-word-1)
-  (define-key evil-visual-state-map (kbd ">") 'prelude-shift-right-visual)
-  (define-key evil-visual-state-map (kbd "<") 'prelude-shift-left-visual)
-  (evil-set-initial-state 'messages-buffer-mode 'normal)
-  (evil-set-initial-state 'dashboard-mode 'normal))
+(define-key evil-visual-state-map (kbd ">") 'prelude-shift-right-visual)
+(define-key evil-visual-state-map (kbd "<") 'prelude-shift-left-visual)
+(evil-set-initial-state 'messages-buffer-mode 'normal)
+(evil-set-initial-state 'dashboard-mode 'normal))
 
 (use-package evil-collection
   :after evil
@@ -203,18 +208,24 @@
   (global-evil-visualstar-mode)
   )
 
-(use-package evil-goggles
-  :after evil
-  :init
-  (setq evil-goggles-duration 0.1
-        evil-goggles-pulse nil ; too slow
-        ;; evil-goggles provides a good indicator of what has been affected.
-        ;; delete/change is obvious, so I'd rather disable it for these.
-        evil-goggles-enable-delete nil
-        evil-goggles-enable-change nil)
-  :config
-  (evil-goggles-mode t)
- )
+;; (use-package evil-goggles
+;;   :after evil
+;;   :init
+;;   (setq evil-goggles-duration 0.1
+;;         evil-goggles-pulse nil ; too slow
+;;         ;; evil-goggles provides a good indicator of what has been affected.
+;;         ;; delete/change is obvious, so I'd rather disable it for these.
+;;         evil-goggles-enable-delete nil
+;;         evil-goggles-enable-change nil)
+;;   :config
+;;   (evil-goggles-mode t)
+;;  )
 
+;; throw away evil-gooles for simiplicy
+(defun meain/evil-yank-advice (orig-fn beg end &rest args)
+  (pulse-momentary-highlight-region beg end)
+  (apply orig-fn beg end args))
+
+(advice-add 'evil-yank :around 'meain/evil-yank-advice)
 
 (provide 'zo-evil)

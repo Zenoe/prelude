@@ -12,8 +12,12 @@
 (with-eval-after-load 'warnings
   (add-to-list 'warning-suppress-types '(defvaralias)))
 (setq comp-async-report-warnings-errors nil)
-(require 'xclip)
-(xclip-mode 1)
+(if (not window-system)
+    (use-package xclip
+      :config
+      (xclip-mode 1)
+      )
+  )
 
 (menu-bar-mode -1)
 
