@@ -32,5 +32,5 @@ var/
 .lsp-session*
 gotools/
 eln-cache/
-
+autoload-gen.el
 auto-save-list/

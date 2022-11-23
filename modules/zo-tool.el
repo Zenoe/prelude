@@ -2,16 +2,12 @@
 
 (defun update-all-autoloads ()
   (interactive)
-  (cd "~/emacs/myemacs")
+  (cd init-base-dir)
   (let ((generated-autoload-file
-         (expand-file-name "autoload/myloaddefs.el")))
-    (when (not (file-exists-p generated-autoload-file))
-      (with-current-buffer (find-file-noselect
-                            generated-autoload-file)
-        (insert ";;")
-        (save-buffer)))
-    (mapcar #'update-directory-autoloads
-            '("lisp" "search"))))
+         (expand-file-name "autoload/autoload-gen.el")))
+    (make-directory-autoloads '("lisp/lib" "search") generated-autoload-file)
+    ))
+
 
 (defun set-proxy()
   (interactive)

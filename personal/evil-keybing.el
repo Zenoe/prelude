@@ -1,7 +1,7 @@
 ;; set leader key in normal state
 (require 'general)
 (require 'evil)
-(load "myloaddefs")
+(require 'autoload-gen)
 
 (global-set-key (kbd "C-s") 'force-normal-n-save)
 (defun doom/escape (&optional interactive)
@@ -63,6 +63,7 @@ non-evil users.")
 (evil-define-key nil doom-leader-map
   " " 'projectile-find-file
   "fr" 'consult-recent-file
+  "fD" 'doom/delete-this-file
   "bb" 'projectile-switch-to-buffer
   "." 'find-file
   "ha" 'consult-apropos
@@ -71,3 +72,8 @@ non-evil users.")
   "*" '+default/search-project-for-symbol-at-point
   "'" 'vertico-repeat
 )
+
+
+(global-set-key (kbd "C-x p") 'proced)
+(global-set-key (kbd "C-+") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)

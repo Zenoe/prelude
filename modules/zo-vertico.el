@@ -17,6 +17,7 @@ folder, otherwise delete a word"
     (backward-kill-word arg)))
 
 (use-package vertico
+  :demand t
   :bind (:map vertico-map
               ("C-j" . vertico-next)
               ("C-k" . vertico-previous)

@@ -69,7 +69,7 @@ by Prelude.")
 (add-to-list 'load-path autoload-dir)
 (add-to-list 'load-path (expand-file-name "search" init-base-dir))
 
-;;(add-to-list 'load-path (expand-file-name "lisp" init-base-dir))
+(add-to-list 'load-path (expand-file-name "lisp" init-base-dir))
 
 ;; reduce the frequency of garbage collection by making it happen on
 ;; each 50MB of allocated data (the default is on every 0.76MB)
@@ -92,7 +92,6 @@ by Prelude.")
 (require 'prelude-core)
 (require 'prelude-mode)
 (require 'prelude-editor)
-(require 'prelude-global-keybindings)
 (require 'zo-packages)
 
 ;; macOS specific settings
@@ -138,8 +137,7 @@ by Prelude.")
 
 (message "[Prelude] Prelude is ready to do thy bidding, Master %s!" prelude-user)
 
-(prelude-eval-after-init
- ;; greet the use with some useful tip
- (run-at-time 5 nil 'prelude-tip-of-the-day))
+;; (prelude-eval-after-init
+;;  (run-at-time 5 nil 'prelude-tip-of-the-day))
 
 ;;; init.el ends here

@@ -82,7 +82,7 @@
 (require 'zo-tool)
 (require 'zo-vertico) ;; A mighty modern alternative to ido
 (require 'zo-evil)
-(require 'zo-perspective)
+(require 'zo-persp-mode)
 
 (provide 'prelude-modules)
 ;;; prelude-modules.el ends here
