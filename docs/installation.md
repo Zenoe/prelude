@@ -154,7 +154,6 @@ modules visit the [docs](modules/index.md).
 (require 'prelude-lisp) ;; Common setup for Lisp-like languages
 (require 'prelude-lsp) ;; Base setup for the Language Server Protocol
 ;; (require 'prelude-lua)
-;; (require 'prelude-ocaml)
 (require 'prelude-perl)
 ;; (require 'prelude-python)
 ;; (require 'prelude-racket)

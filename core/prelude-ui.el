@@ -37,9 +37,7 @@
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))
 
-(when prelude-minimalistic-ui
-  (menu-bar-mode -1))
-
+(menu-bar-mode -1)
 ;; the blinking cursor is nothing, but an annoyance
 (blink-cursor-mode -1)
 
@@ -59,16 +57,10 @@
 (column-number-mode t)
 (size-indication-mode t)
 
-;; show line numbers at the beginning of each line
-(unless prelude-minimalistic-ui
-  ;; there's a built-in linum-mode, but we're using
-  ;; display-line-numbers-mode or nlinum-mode,
-  ;; as it's supposedly faster
-  (if (fboundp 'global-display-line-numbers-mode)
+(if (fboundp 'global-display-line-numbers-mode)
       (global-display-line-numbers-mode)
-    (global-nlinum-mode t)))
+    (global-nlinum-mode t))
 
-;; enable y/n answers
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; more useful frame title, that show either a file or a

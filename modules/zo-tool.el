@@ -1,11 +1,9 @@
-(prelude-require-packages '(general ripgrep pcre2el))
-
 (defun update-all-autoloads ()
   (interactive)
   (cd init-base-dir)
   (let ((generated-autoload-file
          (expand-file-name "autoload/autoload-gen.el")))
-    (make-directory-autoloads '("lisp/lib" "search") generated-autoload-file)
+    (make-directory-autoloads '("lisp/lib" "search" "modules/workspaces/autoload") generated-autoload-file)
     ))
 
 

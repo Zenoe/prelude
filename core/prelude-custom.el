@@ -36,13 +36,6 @@
   :prefix "prelude-"
   :group 'convenience)
 
-(defcustom prelude-minimalistic-ui nil
-  "Controls whether to display the menu-bar and line numbers.
-Note that the toolbar is always hidden regardless of this setting."
-  :type 'boolean
-  :group 'prelude
-  :package-version '(prelude . "1.1"))
-
 (defcustom prelude-super-keybindings t
   "Controls whether to use the Super key in keybindings.
 They can be problematic in some operating systems (e.g. Windows)

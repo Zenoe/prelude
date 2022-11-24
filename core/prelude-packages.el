@@ -1,47 +1,21 @@
 ﻿;;; prelude-packages.el --- Emacs Prelude: default package selection.
-;;
-;; Copyright © 2011-2022 Bozhidar Batsov
-;;
-;; Author: Bozhidar Batsov <bozhidar@batsov.com>
-;; URL: https://github.com/bbatsov/prelude
-
-;; This file is not part of GNU Emacs.
-
 ;;; Commentary:
-
-;; Takes care of the automatic installation of all the packages required by
-;; Emacs Prelude.  This module also adds a couple of package.el extensions
-;; and provides functionality for auto-installing major modes on demand.
-
 ;;; License:
-
-;; This program is free software; you can redistribute it and/or
-;; modify it under the terms of the GNU General Public License
-;; as published by the Free Software Foundation; either version 3
-;; of the License, or (at your option) any later version.
-;;
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-;;
-;; You should have received a copy of the GNU General Public License
-;; along with GNU Emacs; see the file COPYING.  If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
-
 ;;; Code:
+
 (require 'cl-lib)
 (require 'package)
 ;;;; Package setup and additional utility functions
 
 ;; accessing a package repo over https on Windows is a no go, so we
 ;; fallback to http there
-(if (eq system-type 'windows-nt)
-    (add-to-list 'package-archives
-                 '("melpa" . "http://melpa.org/packages/") t)
-  (add-to-list 'package-archives
-               '("melpa" . "https://melpa.org/packages/") t))
+
+(setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                         ("org"   . "https://orgmode.org/elpa/")
+                         ("elpa"  . "https://elpa.gnu.org/packages/")))
+
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.org/packages/") t)
 
 ;; load the pinned packages
 (let ((prelude-pinned-packages-file (expand-file-name "prelude-pinned-packages.el" prelude-dir)))
@@ -84,7 +58,10 @@
     volatile-highlights
     which-key
     zenburn-theme
-    zop-to-char)
+    zop-to-char
+    use-package
+    general ripgrep pcre2el better-jumper restart-emacs
+    )
   "A list of packages to ensure are installed at launch.")
 
 (defun prelude-packages-installed-p ()
@@ -115,6 +92,12 @@ Missing packages are installed automatically."
 
 ;; run package installation
 (prelude-install-packages)
+
+;load it using require
+(require 'use-package)
+;; Make sure packages are downloaded and installed before they are run
+;; also frees you from having to put :ensure t after installing EVERY PACKAGE.
+(setq use-package-always-ensure t)
 
 (defun prelude-list-foreign-packages ()
   "Browse third-party packages not bundled with Prelude.
@@ -151,9 +134,6 @@ PACKAGE is installed only if not already present.  The file is opened in MODE."
     ("\\.d\\'" d-mode d-mode)
     ("\\.dart\\'" dart-mode dart-mode)
     ("\\.elm\\'" elm-mode elm-mode)
-    ("\\.ex\\'" elixir-mode elixir-mode)
-    ("\\.exs\\'" elixir-mode elixir-mode)
-    ("\\.elixir\\'" elixir-mode elixir-mode)
     ("\\.erl\\'" erlang erlang-mode)
     ("\\.feature\\'" feature-mode feature-mode)
     ("\\.go\\'" go-mode go-mode)

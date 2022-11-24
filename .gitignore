@@ -33,4 +33,4 @@ var/
 gotools/
 eln-cache/
 autoload-gen.el
-auto-save-list/
+persp-confs*

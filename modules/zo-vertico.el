@@ -1,4 +1,6 @@
-﻿(defvar +vertico-consult-fd-args nil
+﻿(require 'autoload-gen)
+
+(defvar +vertico-consult-fd-args nil
   "Shell command and arguments the vertico module uses for fd.")
 
 (defvar doom-projectile-fd-binary
@@ -24,14 +26,15 @@ folder, otherwise delete a word"
               ("C-f" . vertico-exit)
               :map minibuffer-local-map
               ("M-h" . dw/minibuffer-backward-kill))
-  :custom
-  (vertico-cycle t)
   :custom-face
   (vertico-current ((t (:background "#3a3f5a"))))
   :init
   (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
   (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
   :config
+  (setq vertico-resize nil
+        vertico-count 17
+        vertico-cycle t)
   (setq-default completion-in-region-function
                 (lambda (&rest args)
                   (apply (if vertico-mode
@@ -45,7 +48,27 @@ folder, otherwise delete a word"
     (projectile-project-root)))
 
 (use-package consult
-  :demand defer
+  :demand t
+  :preface
+  (general-def
+    [remap apropos]                       #'consult-apropos
+    [remap bookmark-jump]                 #'consult-bookmark
+    [remap evil-show-marks]               #'consult-mark
+    [remap evil-show-jumps]               #'+vertico/jump-list
+    [remap evil-show-registers]           #'consult-register
+    [remap goto-line]                     #'consult-goto-line
+    [remap imenu]                         #'consult-imenu
+    [remap locate]                        #'consult-locate
+    [remap load-theme]                    #'consult-theme
+    [remap man]                           #'consult-man
+    [remap recentf-open-files]            #'consult-recent-file
+    [remap switch-to-buffer]              #'consult-buffer
+    [remap switch-to-buffer-other-window] #'consult-buffer-other-window
+    [remap switch-to-buffer-other-frame]  #'consult-buffer-other-frame
+    [remap yank-pop]                      #'consult-yank-pop
+    ;; [remap persp-switch-to-buffer]        #'+vertico/switch-workspace-buffer
+    )
+  (advice-add #'multi-occur :override #'consult-multi-occur)
   :bind (("C-M-s" . consult-line)
          ("C-M-l" . consult-imenu)
          ("C-M-j" . persp-switch-to-buffer*)
@@ -66,9 +89,44 @@ folder, otherwise delete a word"
                       doom-projectile-fd-binary
                       (if IS-WINDOWS "--path-separator=/" ""))
             consult-find-args)))
-  :custom
-  (consult-project-root-function #'dw/get-project-root)
-  (completion-in-region-function #'consult-completion-in-region)
+  (consult-customize
+   consult-ripgrep consult-git-grep consult-grep
+   consult-bookmark consult-recent-file
+   +default/search-project +default/search-other-project
+   +default/search-project-for-symbol-at-point
+   +default/search-cwd +default/search-other-cwd
+   +default/search-notes-for-symbol-at-point
+   +default/search-emacsd
+   consult--source-recent-file consult--source-project-recent-file consult--source-bookmark
+   :preview-key (kbd "M-SPC"))
+  (consult-customize
+   consult-theme
+   :preview-key (list (kbd "C-SPC") :debounce 0.5 'any))
+;; (when (modulep! :lang org)
+;;     (defvar +vertico--consult-org-source
+;;       (list :name     "Org Buffer"
+;;             :category 'buffer
+;;             :narrow   ?o
+;;             :hidden   t
+;;             :face     'consult-buffer
+;;             :history  'buffer-name-history
+;;             :state    #'consult--buffer-state
+;;             :new
+;;             (lambda (name)
+;;               (with-current-buffer (get-buffer-create name)
+;;                 (insert "#+title: " name "\n\n")
+;;                 (org-mode)
+;;                 (consult--buffer-action (current-buffer))))
+;;             :items
+;;             (lambda ()
+;;               (mapcar #'buffer-name
+;;                       (if (featurep 'org)
+;;                           (org-buffer-list)
+;;                         (seq-filter
+;;                          (lambda (x)
+;;                            (eq (buffer-local-value 'major-mode x) 'org-mode))
+;;                          (buffer-list)))))))
+;;     (add-to-list 'consult-buffer-sources '+vertico--consult-org-source 'append))
   )
 
 (use-package marginalia

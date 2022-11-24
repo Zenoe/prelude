@@ -45,8 +45,6 @@ by Prelude.")
   "This directory is for your personal configuration, that you want loaded before Prelude.")
 (defvar prelude-savefile-dir (expand-file-name "savefile" user-emacs-directory)
   "This folder stores all the automatically generated save/history-files.")
-(defvar prelude-modules-file (expand-file-name "prelude-modules.el" prelude-personal-dir)
-  "This file contains a list of modules that will be loaded by Prelude.")
 
 (defvar autoload-dir (expand-file-name "autoload" init-base-dir))
 
@@ -92,7 +90,6 @@ by Prelude.")
 (require 'prelude-core)
 (require 'prelude-mode)
 (require 'prelude-editor)
-(require 'zo-packages)
 
 ;; macOS specific settings
 (when (eq system-type 'darwin)
@@ -110,16 +107,8 @@ by Prelude.")
 (when (eq system-type 'windows-nt)
   (require 'prelude-windows))
 
-(message "[Prelude] Loading Prelude's additional modules...")
-
 ;; the modules
-(if (file-exists-p prelude-modules-file)
-    (load prelude-modules-file)
-  (message "[Prelude] Missing personal modules file %s" prelude-modules-file)
-  (message "[Prelude] Falling back to the bundled example file sample/prelude-modules.el")
-  (message "[Prelude] You should copy this file to your personal configuration folder and tweak it to your liking")
-  (load (expand-file-name "sample/prelude-modules.el" init-base-dir)))
-
+(load (expand-file-name "load-modules.el" init-base-dir))
 ;; config changes made through the customize UI will be stored here
 (setq custom-file (expand-file-name "custom.el" prelude-personal-dir))
 
@@ -131,9 +120,7 @@ by Prelude.")
 ;; load the personal settings (this includes `custom-file')
 (when (file-exists-p prelude-personal-dir)
   (message "[Prelude] Loading personal configuration files in %s..." prelude-personal-dir)
-  (mapc 'load (delete
-               prelude-modules-file
-               (directory-files prelude-personal-dir 't "^[^#\.].*\\.el$"))))
+  (mapc 'load (directory-files prelude-personal-dir 't "^[^#\.].*\\.el$")))
 
 (message "[Prelude] Prelude is ready to do thy bidding, Master %s!" prelude-user)
 

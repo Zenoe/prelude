@@ -64,16 +64,50 @@ non-evil users.")
   " " 'projectile-find-file
   "fr" 'consult-recent-file
   "fD" 'doom/delete-this-file
+  "fR" 'doom/move-this-file
   "bb" 'projectile-switch-to-buffer
+  "bz" 'bury-buffer
   "." 'find-file
   "ha" 'consult-apropos
   ";" 'evil-switch-to-windows-last-buffer
   "/" '+default/search-project
   "*" '+default/search-project-for-symbol-at-point
   "'" 'vertico-repeat
+  "pi" ' projectile-invalidate-cache
 )
 
+(general-create-definer my-local-leader-def
+  ;; :prefix my-local-leader
+  :prefix "SPC TAB")
 
+(my-local-leader-def '(normal visual)
+  "TAB" #'+workspace/display
+  "."   #'+workspace/switch-to
+  "`"   #'+workspace/other
+  "n"   #'+workspace/new
+  "N"   #'+workspace/new-named
+  "l"   #'+workspace/load
+  "s"   #'+workspace/save
+  "x"   #'+workspace/kill-session
+  "d"   #'+workspace/delete
+  "r"   #'+workspace/rename
+  "R"   #'+workspace/restore-last-session
+  "]"   #'+workspace/switch-right
+  "["   #'+workspace/switch-left
+  ;; ...
+  )
+(general-def
+  "M-1"   #'+workspace/switch-to-0
+  "M-2"   #'+workspace/switch-to-1
+  "M-3"   #'+workspace/switch-to-2
+  "M-4"   #'+workspace/switch-to-3
+  "M-5"   #'+workspace/switch-to-4
+  "M-6"   #'+workspace/switch-to-5
+  "M-7"   #'+workspace/switch-to-6
+  "M-8"   #'+workspace/switch-to-7
+  "M-9"   #'+workspace/switch-to-8
+  "M-0"   #'+workspace/switch-to-final
+  )
 (global-set-key (kbd "C-x p") 'proced)
 (global-set-key (kbd "C-+") 'text-scale-increase)
 (global-set-key (kbd "C--") 'text-scale-decrease)
