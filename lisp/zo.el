@@ -1,19 +1,4 @@
 (require 'zo-lib)
-(defvar doom-data-dir
-  (if IS-WINDOWS
-      (expand-file-name "doomemacs/data/" (getenv-internal "APPDATA"))
-    (expand-file-name "doom/" (or (getenv-internal "XDG_DATA_HOME") "~/.local/share")))
-  "Where Doom stores its global data files.
-
-Data files contain shared and long-lived data that Doom, Emacs, and their
-packages require to function correctly or at all. Deleting them by hand will
-cause breakage, and require user intervention (e.g. a 'doom sync' or 'doom env')
-to restore.
-
-Use this for: server binaries, package source, pulled module libraries,
-generated files for profiles, profiles themselves, autoloads/loaddefs, etc.
-
-For profile-local data files, use `doom-profile-data-dir' instead.")
 (defcustom zo-after-init-hook ()
   "A hook run at the (true) end of Emacs startup.
 When this runs, all modules, config files, and startup hooks have been

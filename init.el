@@ -4,53 +4,7 @@
 ;;; Commentary:
 ;;; Code:
 
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-                                        ;(package-initialize)
-(defconst IS-MAC      (eq system-type 'darwin))
-(defconst IS-LINUX    (memq system-type '(gnu gnu/linux gnu/kfreebsd berkeley-unix)))
-(defconst IS-WINDOWS  (memq system-type '(cygwin windows-nt ms-dos)))
-(defvar prelude-user
-  (getenv
-   (if (equal system-type 'windows-nt) "USERNAME" "USER")))
-
-(message "[Prelude] Prelude is powering up... Be patient, Master %s!" prelude-user)
-
-(set-default-coding-systems 'utf-8)
-
-(when (version< emacs-version "25.1")
-  (error "[Prelude] Prelude requires GNU Emacs 25.1 or newer, but you're running %s" emacs-version))
-
-;; Always load newest byte code
-(setq load-prefer-newer t)
-
-;; Define Prelude's directory structure
-(defvar prelude-dir (file-name-directory load-file-name))
-
-(defvar init-base-dir (file-name-directory load-file-name))
-
-(defvar prelude-core-dir (expand-file-name "core" init-base-dir)
-  "The home of Prelude's core functionality.")
-(defvar prelude-modules-dir (expand-file-name  "modules" init-base-dir)
-  "This directory houses all of the built-in Prelude modules.")
-(defvar prelude-personal-dir (expand-file-name "personal" init-base-dir)
-  "This directory is for your personal configuration.
-
-Users of Emacs Prelude are encouraged to keep their personal configuration
-changes in this directory.  All Emacs Lisp files there are loaded automatically
-by Prelude.")
-(defvar prelude-personal-preload-dir (expand-file-name "preload" prelude-personal-dir)
-  "This directory is for your personal configuration, that you want loaded before Prelude.")
-(defvar prelude-savefile-dir (expand-file-name "savefile" user-emacs-directory)
-  "This folder stores all the automatically generated save/history-files.")
-
-(defvar autoload-dir (expand-file-name "autoload" init-base-dir))
-
-
-(unless (file-exists-p prelude-savefile-dir)
-  (make-directory prelude-savefile-dir))
+(load ( expand-file-name "default-config" (file-name-directory load-file-name) ))
 
 (defun prelude-add-subfolders-to-load-path (parent-dir)
   "Add all level PARENT-DIR subdirs to the `load-path'."
@@ -68,14 +22,6 @@ by Prelude.")
 (add-to-list 'load-path (expand-file-name "search" init-base-dir))
 
 (add-to-list 'load-path (expand-file-name "lisp" init-base-dir))
-
-;; reduce the frequency of garbage collection by making it happen on
-;; each 50MB of allocated data (the default is on every 0.76MB)
-(setq gc-cons-threshold 50000000)
-
-;; warn when opening files bigger than 100MB
-(setq large-file-warning-threshold 100000000)
-
 ;; preload the personal settings from `prelude-personal-preload-dir'
 (when (file-exists-p prelude-personal-preload-dir)
   (message "[Prelude] Loading personal configuration files in %s..." prelude-personal-preload-dir)
@@ -122,7 +68,7 @@ by Prelude.")
   (message "[Prelude] Loading personal configuration files in %s..." prelude-personal-dir)
   (mapc 'load (directory-files prelude-personal-dir 't "^[^#\.].*\\.el$")))
 
-(message "[Prelude] Prelude is ready to do thy bidding, Master %s!" prelude-user)
+(message "[Prelude] Prelude is ready to do thy bidding" )
 
 ;; (prelude-eval-after-init
 ;;  (run-at-time 5 nil 'prelude-tip-of-the-day))

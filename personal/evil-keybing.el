@@ -67,6 +67,7 @@ non-evil users.")
   "fR" 'doom/move-this-file
   "bb" 'projectile-switch-to-buffer
   "bz" 'bury-buffer
+  "bB" 'consult-buffer
   "." 'find-file
   "ha" 'consult-apropos
   ";" 'evil-switch-to-windows-last-buffer
