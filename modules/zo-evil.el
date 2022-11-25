@@ -5,7 +5,6 @@
 ;;; evil-visualstar enables searching visual selection with *
 ;;; evil-numbers enables vim style numeric incrementing and decrementing
 
-(global-set-key (kbd "C-M-u") 'universal-argument)
 
 ;; (prelude-require-packages '(goto-chg evil-surround evil-visualstar evil-numbers))
 

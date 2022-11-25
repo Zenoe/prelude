@@ -53,7 +53,6 @@ For profile-local data files, use `doom-profile-data-dir' instead.")
   "Moves the point to the newly created window after splitting."
   (other-window 1))
 
-(setq ad-redefinition-action 'accept)
 (setq help-window-select t)
 
 ;; Ignore warnings about "existing variables being aliased". Otherwise the user
@@ -72,6 +71,45 @@ For profile-local data files, use `doom-profile-data-dir' instead.")
 ;; warn when opening files bigger than 100MB
 (setq large-file-warning-threshold 100000000)
 
+(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+
+;; Don't warn for large files (shows up when launching videos)
+(setq large-file-warning-threshold nil)
+;; Don't warn for following symlinked files
+(setq vc-follow-symlinks t)
+;; Don't warn when advice is added for functions
+(setq ad-redefinition-action 'accept)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defvar hidden-minor-modes ; example, write your own list of hidden
+  '(smartparens-mode
+    which-key-mode
+    evil-collection-unimpaired-mode
+    persp-mode
+    whitespace-mode
+    prelude-mode
+    abbrev-mode
+    auto-fill-function
+    flyspell-mode
+    projectile-mode
+    inf-haskell-mode
+    haskell-indent-mode
+    haskell-doc-mode
+    smooth-scroll-mode))
+(defun purge-minor-modes ()
+  (interactive)
+  (dolist (x hidden-minor-modes nil)
+    (let ((trg (cdr (assoc x minor-mode-alist))))
+      (when trg
+        (setcar trg "")))))
+
+(add-hook 'after-change-major-mode-hook 'purge-minor-modes)
+;; remove all mino-mode from mode-line
+;; (setq mode-line-modes
+;;       (mapcar (lambda (elem)
+;;                 (pcase elem
+;;                   (`(:propertize (,_ minor-mode-alist . ,_) . ,_)
+;;                    "")
+;;                   (t elem)))
+;;               mode-line-modes))
 
 (provide 'default-config)

@@ -31,10 +31,8 @@
 
 (require 'zo)
 (require 'zo-tool)
-(require 'zo-vertico) ;; A mighty modern alternative to ido
 (require 'zo-evil)
-(require 'zo-persp-mode)
-
+(load (expand-file-name "completion/config" prelude-modules-dir))
 (load (expand-file-name "workspaces/config" prelude-modules-dir))
 (provide 'load-modules)
 ;;; load-modules.el ends here

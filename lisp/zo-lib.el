@@ -1,6 +1,9 @@
+(define-error 'doom-hook-error "Error in a Doom startup hook" 'doom-error)
+
 (defun doom-run-hook (hook)
   "Run HOOK (a hook function) with better error handling.
 Meant to be used with `run-hook-wrapped'."
+  (message "run-hooks.............")
   (condition-case-unless-debug e
       (funcall hook)
     (error
@@ -9,6 +12,7 @@ Meant to be used with `run-hook-wrapped'."
   nil)
 
 (defun doom-run-hooks (&rest hooks)
+
   "Run HOOKS (a list of hook variable symbols) with better error handling.
 Is used as advice to replace `run-hooks'."
   (dolist (hook hooks)

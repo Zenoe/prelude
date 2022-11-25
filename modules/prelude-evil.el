@@ -38,7 +38,7 @@
 
 (require 'evil-visualstar)
 
-(setq evil-mode-line-format 'before)
+;; (setq evil-mode-line-format 'before)
 
 (setq evil-emacs-state-cursor  '("red" box))
 (setq evil-normal-state-cursor '("gray" box))

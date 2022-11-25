@@ -1,4 +1,3 @@
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 ;;; Reduce unnecessary/unactionable warnings/logs
 ;; Disable warnings from the legacy advice API. They aren't actionable or
 ;; useful, and often come from third party packages.

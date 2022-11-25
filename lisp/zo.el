@@ -1,13 +1,11 @@
 (require 'zo-lib)
-(defcustom zo-after-init-hook ()
-  "A hook run at the (true) end of Emacs startup.
-When this runs, all modules, config files, and startup hooks have been
-triggered. This is the absolute latest point in the startup process."
-  :group 'zo
-  :type 'hook)
+;; (defcustom zo-after-init-hook ()
+;;   :group 'zo
+;;   :type 'hook)
 
-(define-advice command-line-1 (:after (&rest _) run-after-init-hook)
-  (doom-run-hooks 'zo-after-init-hook))
+;; This is the absolute latest a hook can run in Emacs' startup process.
+;; (define-advice command-line-1 (:after (&rest _) run-after-init-hook)
+;;   (doom-run-hooks 'zo-after-init-hook))
 
 (defmacro defadvice! (symbol arglist &optional docstring &rest body)
   "Define an advice called SYMBOL and add it to PLACES.

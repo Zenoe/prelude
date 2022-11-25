@@ -7,6 +7,9 @@
 ;;
 ;; NOTE persp-mode requires `workgroups' for file persistence in Emacs 24.4.
 
+;; must load persp-mode before initilize workspace
+;; if not can't create the main workspace
+(require 'zo-persp-mode)
 (defvar +workspaces-main "main"
   "The name of the primary and initial workspace, which cannot be deleted.")
 
@@ -32,14 +35,11 @@ stored in `persp-save-dir'.")
 
 (defvar +workspace--old-uniquify-style nil)
 
-
 ;;
 ;; Packages
-
 (use-package persp-mode
   :unless noninteractive
   :commands persp-switch-to-buffer
-  :hook (doom-init-ui . persp-mode)
   :config
   (setq persp-autokill-buffer-on-remove 'kill-weak
         persp-reset-windows-on-nil-window-conf nil
