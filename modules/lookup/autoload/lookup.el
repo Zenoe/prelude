@@ -240,13 +240,7 @@ Will return nil if neither is available. These require ripgrep to be installed."
   (unless identifier
     (let ((query (rxt-quote-pcre identifier)))
       (ignore-errors
-        (cond ((modulep! :completion ivy)
-               (+ivy-file-search :query query)
-               t)
-              ((modulep! :completion helm)
-               (+helm-file-search :query query)
-               t)
-              ((modulep! :completion vertico)
+        (cond ((fboundp 'vertico-mode)
                (+vertico-file-search :query query)
                t))))))
 
@@ -278,10 +272,9 @@ otherwise falling back to ffap.el (find-file-at-point)."
                 (or (file-exists-p guess)
                     (ffap-url-p guess)))
            (find-file-at-point guess))
-          ((and (modulep! :completion ivy)
-                (doom-project-p))
+          ((and (doom-project-p))
            (counsel-file-jump guess (doom-project-root)))
-          ((and (modulep! :completion vertico)
+          ((and (fboundp 'vertico-mode)
                 (doom-project-p))
            (+vertico/find-file-in (doom-project-root) guess))
           ((find-file-at-point (ffap-prompter guess))))
@@ -398,44 +391,3 @@ Otherwise, falls back on `find-file-at-point'."
         ((+lookup--jump-to :file path))
 
         ((user-error "Couldn't find any files here"))))
-
-
-;;
-;;; Dictionary
-
-;;;###autoload
-(defun +lookup/dictionary-definition (identifier &optional arg)
-  "Look up the definition of the word at point (or selection)."
-  (interactive
-   (list (or (doom-thing-at-point-or-region 'word)
-             (read-string "Look up in dictionary: "))
-         current-prefix-arg))
-  (message "Looking up dictionary definition for %S" identifier)
-  (cond ((and IS-MAC (require 'osx-dictionary nil t))
-         (osx-dictionary--view-result identifier))
-        ((and +lookup-dictionary-prefer-offline
-              (require 'wordnut nil t))
-         (unless (executable-find wordnut-cmd)
-           (user-error "Couldn't find %S installed on your system"
-                       wordnut-cmd))
-         (wordnut-search identifier))
-        ((require 'define-word nil t)
-         (define-word identifier nil arg))
-        ((user-error "No dictionary backend is available"))))
-
-;;;###autoload
-(defun +lookup/synonyms (identifier &optional _arg)
-  "Look up and insert a synonym for the word at point (or selection)."
-  (interactive
-   (list (doom-thing-at-point-or-region 'word) ; TODO actually use this
-         current-prefix-arg))
-  (message "Looking up synonyms for %S" identifier)
-  (cond ((and +lookup-dictionary-prefer-offline
-              (require 'synosaurus-wordnet nil t))
-         (unless (executable-find synosaurus-wordnet--command)
-           (user-error "Couldn't find %S installed on your system"
-                       synosaurus-wordnet--command))
-         (synosaurus-choose-and-replace))
-        ((require 'powerthesaurus nil t)
-         (powerthesaurus-lookup-word-dwim))
-        ((user-error "No thesaurus backend is available"))))

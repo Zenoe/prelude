@@ -170,6 +170,11 @@
     "zx" 'kill-current-buffer
     "zp" 'yank-and-indent
     "gc" 'comment-line
+    "K"   #'+lookup/documentation
+    "gd"  #'+lookup/definition
+    "gD"  #'+lookup/references
+    "gf"  #'+lookup/file
+    "gI"  #'+lookup/implementations
     "SPC gw" 'avy-goto-word-1
   )
 

@@ -27,6 +27,7 @@
     )
   )
 
+
 (advice-add 'keyboard-quit :before
             #'zo/delete-window-by-name
             )

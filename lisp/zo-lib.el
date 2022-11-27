@@ -258,4 +258,22 @@ NAME, ARGLIST, and BODY are the same as `defun', `defun*', `defmacro', and
                (when (eq (car-safe type) 'function)
                  (setq type (list 'symbol-function type)))
                (list 'cl-letf (list (cons type rest)) body)))))))
+
+(defmacro doom-log (output &rest args)
+  "Log a message in *Messages*.
+
+Does not emit the message in the echo area. This is a macro instead of a
+function to prevent the potentially expensive execution of its arguments when
+debug mode is off."
+  (declare (debug t))
+  `(when (or init-file-debug noninteractive)
+     (let ((inhibit-message (not init-file-debug)))
+       (message
+        "%s" (propertize
+              ;; Byte compiler: don't complain about more args than %-sequences.
+              (with-no-warnings
+                (format (concat "* %.06f: " ,output)
+                        (float-time (time-subtract (current-time) before-init-time))
+                        ,@args))
+              'face 'font-lock-doc-face)))))
 (provide 'zo-lib)

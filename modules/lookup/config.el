@@ -28,8 +28,9 @@
             ("Wolfram alpha"     "https://wolframalpha.com/input/?i=%s")
             ("Wikipedia"         "https://wikipedia.org/search-redirect.php?language=en&go=Go&search=%s")
             ("MDN"               "https://developer.mozilla.org/en-US/search?q=%s"))
-          (when (modulep! :lang rust)
-            '(("Rust Docs" "https://doc.rust-lang.org/std/?search=%s"))))
+          ;; (when (modulep! :lang rust)
+          ;;   '(("Rust Docs" "https://doc.rust-lang.org/std/?search=%s")))
+          )
   "An alist that maps online resources to either:
 
   1. A search url (needs on '%s' to substitute with an url encoded query),
@@ -110,30 +111,18 @@ If the argument is interactive (satisfies `commandp'), it is called with
 argument: the identifier at point. See `set-lookup-handlers!' about adding to
 this list.")
 
-(defvar +lookup-dictionary-prefer-offline (modulep! +offline)
-  "If non-nil, look up dictionaries online.
-
-Setting this to nil will force it to use offline backends, which may be less
-than perfect, but available without an internet connection.
-
-Used by `+lookup/dictionary-definition' and `+lookup/synonyms'.
-
-For `+lookup/dictionary-definition', this is ignored on Mac, where Emacs users
-Dictionary.app behind the scenes to get definitions.")
-
 
 ;;
 ;;; dumb-jump
 
-(use-package! dumb-jump
+(use-package dumb-jump
   :commands dumb-jump-result-follow
   :config
   (setq dumb-jump-default-project doom-emacs-dir
         dumb-jump-prefer-searcher 'rg
         dumb-jump-aggressive nil
         dumb-jump-selector
-        (cond ((modulep! :completion ivy)  'ivy)
-              ((modulep! :completion helm) 'helm)
+        (cond ((fboundp 'ivy-mode)  'ivy)
               ('popup)))
   (add-hook 'dumb-jump-after-jump-hook #'better-jumper-set-jump))
 
@@ -157,68 +146,50 @@ Dictionary.app behind the scenes to get definitions.")
       (funcall fn)))
 
   ;; This integration is already built into evil
-  (unless (modulep! :editor evil)
+  (unless (fboundp 'evil-mode)
     ;; Use `better-jumper' instead of xref's marker stack
     (advice-add #'xref-push-marker-stack :around #'doom-set-jump-a))
-
-  (use-package! ivy-xref
-    :when (modulep! :completion ivy)
-    :config
-    (set-popup-rule! "^\\*xref\\*$" :ignore t)
-    (setq xref-show-definitions-function #'ivy-xref-show-defs
-          xref-show-xrefs-function       #'ivy-xref-show-xrefs)
-
-    ;; HACK Fix #4386: `ivy-xref-show-xrefs' calls `fetcher' twice, which has
-    ;; side effects that breaks in some cases (i.e. on `dired-do-find-regexp').
-    (defadvice! +lookup--fix-ivy-xrefs (fn fetcher alist)
-      :around #'ivy-xref-show-xrefs
-      (when (functionp fetcher)
-        (setf (alist-get 'fetched-xrefs alist)
-              (funcall fetcher)))
-      (funcall fn fetcher alist)))
-
-  (use-package! helm-xref
-    :when (modulep! :completion helm))
-
-  (use-package! consult-xref
-    :when (modulep! :completion vertico)
-    :defer t
-    :init
-    (setq xref-show-xrefs-function       #'consult-xref
-          xref-show-definitions-function #'consult-xref)))
+  (setq xref-show-xrefs-function       #'consult-xref
+        xref-show-definitions-function #'consult-xref)
+  ;; (use-package consult-xref
+  ;;   :defer t
+  ;;   :init
+  ;;   (setq xref-show-xrefs-function       #'consult-xref
+  ;;         xref-show-definitions-function #'consult-xref))
+  )
 
 
 ;;
 ;;; Dash docset integration
 
-(use-package! dash-docs
-  :when (modulep! +docsets)
-  :defer t
-  :init
-  (add-hook '+lookup-documentation-functions #'+lookup-dash-docsets-backend-fn)
-  :config
-  (setq dash-docs-enable-debugging init-file-debug
-        dash-docs-docsets-path (concat doom-data-dir "docsets/")
-        dash-docs-min-length 2
-        dash-docs-browser-func #'eww)
+;; (use-package dash-docs
+;;   :when (modulep! +docsets)
+;;   :defer t
+;;   :init
+;;   (add-hook '+lookup-documentation-functions #'+lookup-dash-docsets-backend-fn)
+;;   :config
+;;   (setq dash-docs-enable-debugging init-file-debug
+;;         dash-docs-docsets-path (concat doom-data-dir "docsets/")
+;;         dash-docs-min-length 2
+;;         dash-docs-browser-func #'eww)
 
-  (cond ((modulep! :completion helm)
-         (require 'helm-dash nil t))
-        ((modulep! :completion ivy)
-         (require 'counsel-dash nil t))))
+;;   (cond ((modulep! :completion helm)
+;;          (require 'helm-dash nil t))
+;;         ((modulep! :completion ivy)
+;;          (require 'counsel-dash nil t))))
 
 
 ;;
 ;;; Dictionary integration
 
-(use-package! define-word
-  :when (modulep! +dictionary)
-  :unless IS-MAC
-  :defer t
-  :config
-  (setq define-word-displayfn-alist
-        (cl-loop for (service . _) in define-word-services
-                 collect (cons service #'+eval-display-results-in-popup))))
+;; (use-package define-word
+;;   :when (modulep! +dictionary)
+;;   :unless IS-MAC
+;;   :defer t
+;;   :config
+;;   (setq define-word-displayfn-alist
+;;         (cl-loop for (service . _) in define-word-services
+;;                  collect (cons service #'+eval-display-results-in-popup))))
 
 
 ;;;###package synosaurus

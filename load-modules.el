@@ -29,10 +29,12 @@
 ;;; Misc
 (require 'prelude-erc) ;; A popular Emacs IRC client (useful if you're still into Freenode)
 
+(require 'zo-tool)
 (require 'zo-lib)
 (require 'zo-evil)
 (require 'zo-project)
 (load (expand-file-name "completion/config" prelude-modules-dir))
 (load (expand-file-name "workspaces/config" prelude-modules-dir))
+(load (expand-file-name "lookup/config" prelude-modules-dir))
 (provide 'load-modules)
 ;;; load-modules.el ends here

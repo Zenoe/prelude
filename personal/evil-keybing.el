@@ -41,6 +41,9 @@ non-evil users.")
   "/" '+default/search-project
   "*" '+default/search-project-for-symbol-at-point
   "'" 'vertico-repeat
+  "cd" '+lookup/definition
+  "cD" '+lookup/references
+  "ck" '+lookup/documentation
   "fr" 'consult-recent-file
   "fD" 'doom/delete-this-file
   "fR" 'doom/move-this-file

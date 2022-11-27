@@ -60,7 +60,7 @@
     zenburn-theme
     zop-to-char
     use-package
-    general ripgrep pcre2el better-jumper restart-emacs
+    general ripgrep pcre2el better-jumper restart-emacs dumb-jump request
     )
   "A list of packages to ensure are installed at launch.")
 
