@@ -130,7 +130,7 @@
   (let ((file-dir (file-truename (file-name-directory file))))
     (cl-some (lambda (dir)
                (string-prefix-p dir file-dir))
-             (mapcar 'file-truename (list prelude-savefile-dir package-user-dir)))))
+             (mapcar 'file-truename (list emacs-data-dir prelude-savefile-dir package-user-dir)))))
 
 (add-to-list 'recentf-exclude 'prelude-recentf-exclude-p)
 

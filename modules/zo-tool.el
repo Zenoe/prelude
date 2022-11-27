@@ -1,4 +1,4 @@
-(defun update-all-autoloads ()
+(defun zo/update-all-autoloads ()
   (interactive)
   (cd init-base-dir)
   (let ((generated-autoload-file
@@ -26,6 +26,13 @@
       )
     )
   )
+
+(advice-add 'keyboard-quit :before
+            #'zo/delete-window-by-name
+            )
+(advice-add 'evil-force-normal-state :before
+            #'zo/delete-window-by-name
+            )
 ;; (zo/delete-window-by-name "*Help*")
 ;; (zo/delete-window-by-name )
 

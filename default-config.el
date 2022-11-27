@@ -101,9 +101,6 @@ For profile-local data files, use `doom-profile-data-dir' instead.")
     auto-fill-function
     flyspell-mode
     projectile-mode
-    inf-haskell-mode
-    haskell-indent-mode
-    haskell-doc-mode
     smooth-scroll-mode))
 (defun purge-minor-modes ()
   (interactive)

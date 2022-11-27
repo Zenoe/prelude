@@ -27,9 +27,6 @@ Is used as advice to replace `run-hooks'."
                 (caddr e)))
        (signal 'doom-hook-error (cons hook (cdr e)))))))
 
-;; (defcustom zo-after-init-hook ()
-;;   :group 'zo
-;;   :type 'hook)
 
 ;; This is the absolute latest a hook can run in Emacs' startup process.
 ;; (define-advice command-line-1 (:after (&rest _) run-after-init-hook)

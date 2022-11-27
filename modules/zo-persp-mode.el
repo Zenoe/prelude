@@ -1,7 +1,7 @@
 (use-package persp-mode
   )
 
-(with-eval-after-load "persp-mode"
+(with-eval-after-load 'persp-mode
   (add-hook 'window-setup-hook #'(lambda () (persp-mode 1))))
 
 (provide 'zo-persp-mode)
