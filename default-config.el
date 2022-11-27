@@ -17,18 +17,24 @@
   (make-directory prelude-savefile-dir))
 (defvar emacs-data-dir
   (if IS-WINDOWS
-      (expand-file-name "emacs-local/" (getenv-internal "APPDATA"))
-    (expand-file-name "emacs-local/" (or (getenv-internal "XDG_DATA_HOME") "~/.local/share")))
-  "Where Doom stores its global data files.
-
-Data files contain shared and long-lived data that Doom, Emacs, and their
-packages require to function correctly or at all. Deleting them by hand will
-cause breakage, and require user intervention (e.g. a 'doom sync' or 'doom env')
-to restore.
+      (expand-file-name "emacs-local/data" (getenv-internal "APPDATA"))
+    (expand-file-name "emacs-local/data" (or (getenv-internal "XDG_DATA_HOME") "~/.local/share/")))
+  "stores global data files here
 Use this for: server binaries, package source, pulled module libraries,
 generated files for profiles, profiles themselves, autoloads/loaddefs, etc.
 For profile-local data files, use `doom-profile-data-dir' instead.")
-(message emacs-data-dir)
+
+(defvar emacs-cache-dir
+  (if IS-WINDOWS
+      (expand-file-name "emacs-local/cache" (getenv-internal "APPDATA"))
+    (expand-file-name "emacs-local/cache" (or (getenv-internal "XDG_DATA_HOME") "~/.local/share/")))
+  )
+(defvar zo-local-dir
+  (if IS-WINDOWS
+      (expand-file-name "emacs-local/zo-local" (getenv-internal "APPDATA"))
+    (expand-file-name "emacs-local/zo-local" (or (getenv-internal "XDG_DATA_HOME") "~/.local/share/")))
+  "system specified data dir can not be shared across systems"
+  )
 (defvar autoload-dir (expand-file-name "autoload" init-base-dir))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; emacs settings
@@ -39,7 +45,7 @@ For profile-local data files, use `doom-profile-data-dir' instead.")
 (when (version< emacs-version "25.1")
   (error "Requires GNU Emacs 25.1 or newer, but you're running %s" emacs-version))
 (make-directory emacs-data-dir 'parents)
-(setq user-emacs-directory (expand-file-name "emacs-local" (getenv-internal "APPDATA"))
+(setq user-emacs-directory emacs-data-dir
       url-history-file (expand-file-name "url/history" user-emacs-directory))
 (setq dired-clean-confirm-killing-deleted-buffers nil)
 
@@ -79,6 +85,10 @@ For profile-local data files, use `doom-profile-data-dir' instead.")
 (setq vc-follow-symlinks t)
 ;; Don't warn when advice is added for functions
 (setq ad-redefinition-action 'accept)
+
+;; Set default connection mode to SSH
+(setq tramp-default-method "ssh")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defvar hidden-minor-modes ; example, write your own list of hidden
   '(smartparens-mode
@@ -111,5 +121,5 @@ For profile-local data files, use `doom-profile-data-dir' instead.")
 ;;                    "")
 ;;                   (t elem)))
 ;;               mode-line-modes))
-
-(provide 'default-config)
+;; (message (expand-file-name "configs/other-config" (file-name-directory (buffer-file-name))))
+(load (expand-file-name "configs/other-config" init-base-dir))

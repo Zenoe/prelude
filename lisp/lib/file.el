@@ -1,3 +1,39 @@
+(defun doom-files--build-checks (spec &optional directory)
+  "Converts a simple nested series of or/and forms into a series of
+`file-exists-p' checks.
+
+For example
+
+  (doom-files--build-checks
+    '(or A (and B C))
+    \"~\")
+
+Returns (not precisely, but effectively):
+
+  '(let* ((_directory \"~\")
+          (A (expand-file-name A _directory))
+          (B (expand-file-name B _directory))
+          (C (expand-file-name C _directory)))
+     (or (and (file-exists-p A) A)
+         (and (if (file-exists-p B) B)
+              (if (file-exists-p C) C))))
+
+This is used by `file-exists-p!' and `project-file-exists-p!'."
+  (declare (pure t) (side-effect-free t))
+  (if (and (listp spec)
+           (memq (car spec) '(or and)))
+      (cons (car spec)
+            (cl-loop for it in (cdr spec)
+                     collect (doom-files--build-checks it directory)))
+    (let ((filevar (make-symbol "file")))
+      `(let ((,filevar ,spec))
+         (and (stringp ,filevar)
+              ,(if directory
+                   `(let ((default-directory ,directory))
+                      (file-exists-p ,filevar))
+                 `(file-exists-p ,filevar))
+              ,filevar)))))
+
 (defun doom-files--update-refs (&rest files)
   "Ensure FILES are updated in `recentf', `magit' and `save-place'."
   (let (toplevels)
@@ -87,3 +123,14 @@ If FORCE-P, overwrite the destination file if it exists, without confirmation."
     (set-visited-file-name new-path t t)
     (doom-files--update-refs old-path new-path)
     (message "File moved to %S" (abbreviate-file-name new-path))))
+
+;;;###autoload
+(defmacro file-exists-p! (files &optional directory)
+  "Returns non-nil if the FILES in DIRECTORY all exist.
+
+DIRECTORY is a path; defaults to `default-directory'.
+
+Returns the last file found to meet the rules set by FILES, which can be a
+single file or nested compound statement of `and' and `or' statements."
+  `(let ((p ,(doom-files--build-checks files directory)))
+     (and p (expand-file-name p ,directory))))

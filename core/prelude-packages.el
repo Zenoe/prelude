@@ -134,7 +134,6 @@ PACKAGE is installed only if not already present.  The file is opened in MODE."
     ("\\.d\\'" d-mode d-mode)
     ("\\.dart\\'" dart-mode dart-mode)
     ("\\.elm\\'" elm-mode elm-mode)
-    ("\\.erl\\'" erlang erlang-mode)
     ("\\.feature\\'" feature-mode feature-mode)
     ("\\.go\\'" go-mode go-mode)
     ("\\.graphql\\'" graphql-mode graphql-mode)

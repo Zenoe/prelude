@@ -178,4 +178,4 @@ If DIR is not a project, it will be indexed (but not cached)."
   "Return non-nil if temporary file or a straight package."
   (unless (file-remote-p project-root)
     (or (file-in-directory-p project-root temporary-file-directory)
-        (file-in-directory-p project-root doom-local-dir))))
+        (file-in-directory-p project-root zo-local-dir))))

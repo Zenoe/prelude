@@ -1,6 +1,5 @@
 (require 'general)
 (require 'evil)
-(require 'autoload-gen)
 
 (global-set-key (kbd "C-M-u") 'universal-argument)
 (global-set-key (kbd "C-s") 'force-normal-n-save)
@@ -68,6 +67,7 @@ non-evil users.")
   "bz" 'bury-buffer
   "bB" 'consult-buffer
   "ha" 'consult-apropos
+  "qq" 'restart-emacs
   "tw" 'whitespace-mode
   "tt" '(counsel-load-theme :which-key "choose theme")
   "pi" 'projectile-invalidate-cache

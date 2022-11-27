@@ -4,7 +4,7 @@
 ;;; Commentary:
 ;;; Code:
 
-(load ( expand-file-name "default-config" (file-name-directory load-file-name) ))
+(load ( expand-file-name  "default-config"  (file-name-directory load-file-name) ))
 
 (defun prelude-add-subfolders-to-load-path (parent-dir)
   "Add all level PARENT-DIR subdirs to the `load-path'."
@@ -26,8 +26,6 @@
 (when (file-exists-p prelude-personal-preload-dir)
   (message "[Prelude] Loading personal configuration files in %s..." prelude-personal-preload-dir)
   (mapc 'load (directory-files prelude-personal-preload-dir 't "^[^#\.].*el$")))
-
-(message "[Prelude] Loading Prelude's core modules...")
 
 ;; load the core stuff
 (require 'prelude-packages)

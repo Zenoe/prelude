@@ -33,7 +33,6 @@
         (elisp-slime-nav . "melpa-stable")
         (elm-mode . "melpa-stable")
         (epl . "melpa-stable")
-        (erlang . "melpa-stable")
         (evil . "melpa-stable")
         (evil-numbers . "melpa-stable")
         (evil-surround . "melpa-stable")
