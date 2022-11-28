@@ -40,6 +40,7 @@ For profile-local data files, use `doom-profile-data-dir' instead.")
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; emacs settings
 (set-default-coding-systems 'utf-8)
 (menu-bar-mode -1)
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
 ;; Always load newest byte code
 (setq load-prefer-newer t)
 (when (version< emacs-version "25.1")

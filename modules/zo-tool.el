@@ -1,12 +1,14 @@
 (defun zo/update-all-autoloads ()
   (interactive)
   (cd init-base-dir)
-  (let ((generated-autoload-file
-         (expand-file-name "autoload/autoload-gen.el")))
-    (make-directory-autoloads
-     '("lisp/lib" "search" "modules/workspaces/autoload" "modules/lookup/autoload")
-     generated-autoload-file)
-    ))
+  (setq generated-autoload-file (expand-file-name "autoload/autoload-gen.el"))
+  (make-directory-autoloads
+   '("lisp/lib" "search" "modules/workspaces/autoload" "modules/lookup/autoload")
+   generated-autoload-file)
+  )
+(if (not generated-autoload-file )
+    (zo/update-all-autoloads))
+(require 'autoload-gen)
 
 (defun zo/delete-window-by-name (&optional name)
   "Delete popup window which got the name of *abc* form."
@@ -44,9 +46,5 @@
           ("http" . "127.0.0.1:7890")
           ("https" . "127.0.0.1:7890")))
   )
-
-;; (if (not (file-exists-p ))
-;;     (mkdir erc-log-channels-directory t))
-;; (require 'autoload-gen)
 
 (provide 'zo-tool)
