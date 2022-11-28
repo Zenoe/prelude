@@ -1,13 +1,16 @@
+(defvar auto-gen-file (expand-file-name "autoload/autoload-gen.el" init-base-dir))
 (defun zo/update-all-autoloads ()
   (interactive)
   (cd init-base-dir)
-  (setq generated-autoload-file (expand-file-name "autoload/autoload-gen.el"))
   (make-directory-autoloads
    '("lisp/lib" "search" "modules/workspaces/autoload" "modules/lookup/autoload")
-   generated-autoload-file)
+   auto-gen-file)
   )
-(if (not generated-autoload-file )
-    (zo/update-all-autoloads))
+
+(if (not (file-exists-p auto-gen-file ))
+    (zo/update-all-autoloads)
+  )
+
 (require 'autoload-gen)
 
 (defun zo/delete-window-by-name (&optional name)

@@ -29,6 +29,7 @@
 ;;; Misc
 (require 'prelude-erc) ;; A popular Emacs IRC client (useful if you're still into Freenode)
 
+(require 'zo-edit)
 (require 'zo-tool)
 (require 'zo-lib)
 (require 'zo-evil)
