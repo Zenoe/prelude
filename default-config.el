@@ -4,6 +4,10 @@
 (defconst IS-LINUX    (memq system-type '(gnu gnu/linux gnu/kfreebsd berkeley-unix)))
 (defconst IS-WINDOWS  (memq system-type '(cygwin windows-nt ms-dos)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; vars
+(defvar zo-after-init nil
+  "Transient hooks run before the first user input.")
+(put 'zo-after-init 'permanent-local t)
+
 (defvar prelude-dir (file-name-directory load-file-name))
 (defvar init-base-dir (file-name-directory load-file-name))
 (defvar prelude-core-dir (expand-file-name "core" init-base-dir))
@@ -144,4 +148,11 @@ For profile-local data files, use `doom-profile-data-dir' instead.")
 ;;                   (t elem)))
 ;;               mode-line-modes))
 ;; (message (expand-file-name "configs/other-config" (file-name-directory (buffer-file-name))))
+
+;; Translate the problematic keys to the function key Hyper:
+(keyboard-translate ?\C-m ?\H-m)
+;; Rebind then accordantly:
+(global-set-key [?\H-m] 'delete-backward-char)
+(keyboard-translate ?\C-i ?\H-i)
+(global-set-key [?\H-i] 'better-jumper-jump-forward)
 (load (expand-file-name "configs/other-config" init-base-dir))

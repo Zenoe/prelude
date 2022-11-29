@@ -66,6 +66,8 @@
   (message "[Prelude] Loading personal configuration files in %s..." prelude-personal-dir)
   (mapc 'load (directory-files prelude-personal-dir 't "^[^#\.].*\\.el$")))
 
+
+(run-hooks 'zo-after-init-hook)
 (message "[Prelude] Prelude is ready to do thy bidding" )
 
 ;; (prelude-eval-after-init
