@@ -1,20 +1,28 @@
+;; -*- lexical-binding: t; -*-
 ;; config of emacs itself. no 3rd party package config
 
 (defconst IS-MAC      (eq system-type 'darwin))
 (defconst IS-LINUX    (memq system-type '(gnu gnu/linux gnu/kfreebsd berkeley-unix)))
 (defconst IS-WINDOWS  (memq system-type '(cygwin windows-nt ms-dos)))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; vars
+
+(setq initial-major-mode 'fundamental-mode)
+;;Emacs resizes the (GUI) frame when your newly set font is larger (or smaller) than the system default. This seems to add 0.4-1s to startup.
+(setq frame-inhibit-implied-resize t)
+;; doesn't have src installed
+;; (setq find-function-C-source-directory source-directory)
 (defvar zo-after-init nil
   "Transient hooks run before the first user input.")
 (put 'zo-after-init 'permanent-local t)
+(defvar doom-first-input-hook nil
+  "Transient hooks run before the first user input.")
+(put 'doom-first-input-hook 'permanent-local t)
 
 (defvar prelude-dir (file-name-directory load-file-name))
 (defvar init-base-dir (file-name-directory load-file-name))
 (defvar prelude-core-dir (expand-file-name "core" init-base-dir))
 (defvar prelude-modules-dir (expand-file-name  "modules" init-base-dir))
-(defvar prelude-personal-dir (expand-file-name "personal" init-base-dir))
-(defvar prelude-personal-preload-dir (expand-file-name "preload" prelude-personal-dir)
-  "This directory is for your personal configuration, that you want loaded before Prelude.")
+
 (defvar prelude-savefile-dir (expand-file-name "savefile" user-emacs-directory)
   "This folder stores all the automatically generated save/history-files.")
 (unless (file-exists-p prelude-savefile-dir)
@@ -39,12 +47,8 @@ For profile-local data files, use `doom-profile-data-dir' instead.")
     (expand-file-name "emacs-local/zo-local" (or (getenv-internal "XDG_DATA_HOME") "~/.local/share/")))
   "system specified data dir can not be shared across systems"
   )
-(defvar autoload-dir (expand-file-name "autoload" init-base-dir))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; emacs settings
-(set-default-coding-systems 'utf-8)
-(menu-bar-mode -1)
-(add-to-list 'initial-frame-alist '(fullscreen . maximized))
 ;; Always load newest byte code
 (setq load-prefer-newer t)
 (when (version< emacs-version "25.1")
@@ -60,12 +64,6 @@ For profile-local data files, use `doom-profile-data-dir' instead.")
 (setq make-backup-files nil) ; stop creating backup~ files
 (setq auto-save-default nil) ; stop creating #autosave# files
 
-(defadvice split-window (after move-point-to-new-window activate)
-  "Moves the point to the newly created window after splitting."
-  (other-window 1))
-
-(setq help-window-select t)
-
 ;; Ignore warnings about "existing variables being aliased". Otherwise the user
 ;; gets very intrusive popup warnings about our (intentional) uses of
 ;; defvaralias, which are done because ensuring aliases are created before
@@ -75,17 +73,8 @@ For profile-local data files, use `doom-profile-data-dir' instead.")
   (add-to-list 'warning-suppress-types '(defvaralias)))
 (setq comp-async-report-warnings-errors nil)
 
-;; reduce the frequency of garbage collection by making it happen on
-;; each 50MB of allocated data (the default is on every 0.76MB)
-(setq gc-cons-threshold 50000000)
-
-;; warn when opening files bigger than 100MB
-(setq large-file-warning-threshold 100000000)
-
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
-;; Don't warn for large files (shows up when launching videos)
-(setq large-file-warning-threshold nil)
 ;; Don't warn for following symlinked files
 (setq vc-follow-symlinks t)
 ;; Don't warn when advice is added for functions
@@ -93,7 +82,6 @@ For profile-local data files, use `doom-profile-data-dir' instead.")
 
 ;; Set default connection mode to SSH
 (setq tramp-default-method "ssh")
-
 
 (setq create-lockfiles nil
       make-backup-files nil
@@ -109,15 +97,15 @@ For profile-local data files, use `doom-profile-data-dir' instead.")
 ;; Create missing directories when we open a file that doesn't exist under a
 ;; directory tree that may not exist.
 (add-hook 'find-file-not-found-functions
-  (defun doom-create-missing-directories-h ()
-    "Automatically create missing directories when creating new files."
-    (unless (file-remote-p buffer-file-name)
-      (let ((parent-directory (file-name-directory buffer-file-name)))
-        (and (not (file-directory-p parent-directory))
-             (y-or-n-p (format "Directory `%s' does not exist! Create it?"
-                               parent-directory))
-             (progn (make-directory parent-directory 'parents)
-                    t))))))
+          (defun doom-create-missing-directories-h ()
+            "Automatically create missing directories when creating new files."
+            (unless (file-remote-p buffer-file-name)
+              (let ((parent-directory (file-name-directory buffer-file-name)))
+                (and (not (file-directory-p parent-directory))
+                     (y-or-n-p (format "Directory `%s' does not exist! Create it?"
+                                       parent-directory))
+                     (progn (make-directory parent-directory 'parents)
+                            t))))))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defvar hidden-minor-modes ; example, write your own list of hidden
   '(smartparens-mode

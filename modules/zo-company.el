@@ -101,5 +101,3 @@
   (setq company-fuzzy-sorting-backend 'alphabetic
         company-fuzzy-prefix-on-top t
         company-fuzzy-trigger-symbols '("." "->" "<" "\"" "'" "@")))
-
-(provide 'zo-company)

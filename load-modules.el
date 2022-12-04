@@ -1,41 +1,33 @@
-﻿(require 'prelude-company)
-;; (require 'prelude-key-chord) ;; Binds useful features to key combinations
-(require 'prelude-org)
-(require 'prelude-c)
-;; (require 'prelude-clojure)
-;; (require 'prelude-coffee)
-;; (require 'prelude-common-lisp)
-(require 'prelude-css)
-;; (require 'prelude-dart)
-(require 'prelude-emacs-lisp)
-;; (require 'prelude-erlang)
-;; (require 'prelude-go)
-(require 'prelude-js)
-;; (require 'prelude-latex)
-(require 'prelude-lisp) ;; Common setup for Lisp-like languages
-;; (require 'prelude-literate-programming) ;; Setup for Literate Programming
-(require 'prelude-lsp) ;; Base setup for the Language Server Protocol
-;; (require 'prelude-lua)
-(require 'prelude-perl)
-;; (require 'prelude-racket)
-;; (require 'prelude-rust)
-;; (require 'prelude-scala)
-(require 'prelude-shell)
-;; (require 'prelude-scss)
-;; (require 'prelude-ts)
-(require 'prelude-web) ;; Emacs mode for web templates
-(require 'prelude-xml)
-(require 'prelude-yaml)
-;;; Misc
-(require 'prelude-erc) ;; A popular Emacs IRC client (useful if you're still into Freenode)
+﻿;; -*- lexical-binding: t; -*-
 
-(require 'zo-edit)
-(require 'zo-tool)
-(require 'zo-lib)
-(require 'zo-evil)
-(require 'zo-project)
-(load (expand-file-name "completion/config" prelude-modules-dir))
-(load (expand-file-name "workspaces/config" prelude-modules-dir))
-(load (expand-file-name "lookup/config" prelude-modules-dir))
-(provide 'load-modules)
-;;; load-modules.el ends here
+(let ( (zo-modules '(
+                     "zo-lib"
+                     "zo-ui"
+                     "zo-edit"
+                     "zo-tool"
+                     "prelude-programming" ;; must load before other programming language
+                     "prelude-company"
+                     "prelude-org"
+                     "prelude-c"
+                     "prelude-css"
+                     "prelude-lisp"
+                     "prelude-perl"
+                     "prelude-shell"
+                     "prelude-web"
+                     "prelude-xml"
+                     "prelude-yaml"
+                     "zo-evil"
+                     "zo-project"
+                     "zo-company"
+                     "zo-persp-mode"
+                     "prelude-erc"
+                     "completion/config"
+                     "workspaces/config"
+                     "lookup/config"
+                     "zo-keybinding"
+                     )
+                   )
+       )
+  (zo/load zo-modules prelude-modules-dir)
+
+  )

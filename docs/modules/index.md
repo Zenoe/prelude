@@ -22,7 +22,7 @@ Here's a real example.
 ;;
 ;;; Code:
 
-(require 'prelude-programming)
+
 
 (prelude-require-packages '(inf-ruby yari))
 

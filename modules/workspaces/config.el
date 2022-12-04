@@ -9,7 +9,6 @@
 
 ;; must load persp-mode before initilize workspace
 ;; if not can't create the main workspace
-(require 'zo-persp-mode)
 (defvar +workspaces-main "main"
   "The name of the primary and initial workspace, which cannot be deleted.")
 

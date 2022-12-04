@@ -28,7 +28,6 @@
 
 ;;; Code:
 
-(require 'prelude-programming)
 (require 'prelude-lsp)
 
 (prelude-require-packages '(go-mode

@@ -119,6 +119,7 @@
   (evil-force-normal-state)
   (call-interactively 'indent-region))
 
+;; this comes before evil does not guarantee it being installed before evil
 (use-package undo-fu
   :config
   (global-unset-key (kbd "C-z"))
@@ -231,5 +232,3 @@
   (apply orig-fn beg end args))
 
 (advice-add 'evil-yank :around 'meain/evil-yank-advice)
-
-(provide 'zo-evil)

@@ -36,7 +36,6 @@ non-evil users.")
 (evil-define-key nil doom-leader-map
   " " 'projectile-find-file
   "." 'find-file
-  " " 'projectile-find-file
   ";" 'evil-switch-to-windows-last-buffer
   "/" '+default/search-project
   "*" '+default/search-project-for-symbol-at-point

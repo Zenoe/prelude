@@ -1,76 +1,90 @@
-;;; init.el --- Prelude's configuration entry point.
-;;
-;; Copyright (c) 2011-2022 Bozhidar Batsov
-;;; Commentary:
-;;; Code:
+;; -*- lexical-binding: t; -*-
+;; Startup time
+(defun efs/display-startup-time ()
+  (message
+   "Emacs loaded in %s with %d garbage collections."
+   (format
+    "%.2f seconds"
+    (float-time
+     (time-subtract after-init-time before-init-time)))
+   gcs-done))
 
-(load ( expand-file-name  "default-config"  (file-name-directory load-file-name) ))
+(add-hook 'emacs-startup-hook #'efs/display-startup-time)
 
-(defun prelude-add-subfolders-to-load-path (parent-dir)
-  "Add all level PARENT-DIR subdirs to the `load-path'."
-  (dolist (f (directory-files parent-dir))
-    (let ((name (expand-file-name f parent-dir)))
-      (when (and (file-directory-p name)
-                 (not (string-prefix-p "." f)))
-        (add-to-list 'load-path name)
-        (prelude-add-subfolders-to-load-path name)))))
+(defvar last-file-name-handler-alist file-name-handler-alist)
+;; reduce the frequency of garbage collection by making it happen on
+;; each 50MB of allocated data (the default is on every 0.76MB)
+;; (setq gc-cons-threshold 50000000)
+(setq gc-cons-threshold 402653184
+      gc-cons-percentage 0.6
+      file-name-handler-alist nil)
 
-;; add Prelude's directories to Emacs's `load-path'
-(add-to-list 'load-path prelude-core-dir)
-(add-to-list 'load-path prelude-modules-dir)
-(add-to-list 'load-path autoload-dir)
-(add-to-list 'load-path (expand-file-name "search" init-base-dir))
+(defun zo/load (modules? parent-dir)
+  (if (listp modules?)
+      (dolist (mod modules?)
+        ;; set third param t to avoid loading message
+        (load (expand-file-name mod parent-dir) nil t))
+    (load (expand-file-name modules? parent-dir) nil t)
+    )
+  )
 
-(add-to-list 'load-path (expand-file-name "lisp" init-base-dir))
-;; preload the personal settings from `prelude-personal-preload-dir'
-(when (file-exists-p prelude-personal-preload-dir)
-  (message "[Prelude] Loading personal configuration files in %s..." prelude-personal-preload-dir)
-  (mapc 'load (directory-files prelude-personal-preload-dir 't "^[^#\.].*el$")))
+(zo/load "default-config" (file-name-directory load-file-name))
 
-;; load the core stuff
-(require 'prelude-packages)
-(require 'prelude-custom)  ;; Needs to be loaded before core, editor and ui
-(require 'prelude-ui)
-(require 'prelude-core)
-(require 'prelude-mode)
-(require 'prelude-editor)
+;; need this. for autoload files to be found
+;; if not complains about cant find ../lib/file jump out
+(add-to-list 'load-path (expand-file-name "xxx" init-base-dir))
+
+(let ((zo-modules '(
+                     "prelude-packages"
+                     "prelude-custom"
+                     "prelude-core"
+                     "prelude-mode"
+                     )))
+  (zo/load zo-modules prelude-core-dir)
+  )
 
 ;; macOS specific settings
 (when (eq system-type 'darwin)
   (require 'prelude-macos))
-
 ;; Linux specific settings
 (when (eq system-type 'gnu/linux)
   (require 'prelude-linux))
-
 ;; WSL specific setting
 (when (and (eq system-type 'gnu/linux) (getenv "WSLENV"))
   (require 'prelude-wsl))
-
 ;; Windows specific settings
 (when (eq system-type 'windows-nt)
-  (require 'prelude-windows))
+  (zo/load "prelude-windows" prelude-core-dir)
+  )
 
 ;; the modules
-(load (expand-file-name "load-modules.el" init-base-dir))
+
+(zo/load "load-modules" init-base-dir)
 ;; config changes made through the customize UI will be stored here
-(setq custom-file (expand-file-name "custom.el" prelude-personal-dir))
 
-
-(defvar custom-dir (expand-file-name "custom" init-base-dir))
 (setq custom-file (concat user-emacs-directory "custom.el"))
 (when (file-exists-p custom-file)
   (load custom-file))
-;; load the personal settings (this includes `custom-file')
-(when (file-exists-p prelude-personal-dir)
-  (message "[Prelude] Loading personal configuration files in %s..." prelude-personal-dir)
-  (mapc 'load (directory-files prelude-personal-dir 't "^[^#\.].*\\.el$")))
-
 
 (run-hooks 'zo-after-init-hook)
-(message "[Prelude] Prelude is ready to do thy bidding" )
 
-;; (prelude-eval-after-init
+(message "ready to do thy bidding" )
+
+(run-with-idle-timer
+ 4 nil
+ (lambda ()
+   (setq gc-cons-threshold 16777216
+         gc-cons-percentage 0.1
+         file-name-handler-alist last-file-name-handler-alist)
+   ))
+
+;; after startup, it is important you reset this to some reasonable default. A large
+;; gc-cons-threshold will cause freezing and stuttering during long-term
+;; interactive use. I find these are nice defaults:
+
+;; (add-hook! 'emacs-startup-hook
+;;   )
+;; ;; (prelude-eval-after-init
 ;;  (run-at-time 5 nil 'prelude-tip-of-the-day))
 
 ;;; init.el ends here

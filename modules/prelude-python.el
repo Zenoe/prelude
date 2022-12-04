@@ -34,7 +34,7 @@
 ;;; Code:
 
 (require 'electric)
-(require 'prelude-programming)
+
 
 ;; Code navigation, documentation lookup and completion for Python
 (prelude-require-package 'anaconda-mode)

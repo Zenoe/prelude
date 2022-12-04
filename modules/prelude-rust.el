@@ -27,7 +27,7 @@
 
 ;;; Code:
 
-(require 'prelude-programming)
+
 
 ;; You may need to install the following packages on your system:
 ;; * rustc (Rust Compiler)

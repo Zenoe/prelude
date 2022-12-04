@@ -59,7 +59,6 @@
         (goto-chg . "melpa-stable")
         (grizzl . "melpa-stable")
         (groovy-mode . "melpa-stable")
-        (guru-mode . "melpa-stable")
         (haml-mode . "melpa-stable")
         (haskell-mode . "melpa-stable")
         (imenu-anywhere . "melpa-stable")

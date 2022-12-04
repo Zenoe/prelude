@@ -1,6 +1,4 @@
-﻿(require 'autoload-gen)
-
-(defvar +vertico-consult-fd-args nil
+﻿(defvar +vertico-consult-fd-args nil
   "Shell command and arguments the vertico module uses for fd.")
 
 (defvar doom-projectile-fd-binary
@@ -102,31 +100,31 @@ folder, otherwise delete a word"
   (consult-customize
    consult-theme
    :preview-key (list (kbd "C-SPC") :debounce 0.5 'any))
-;; (when (modulep! :lang org)
-;;     (defvar +vertico--consult-org-source
-;;       (list :name     "Org Buffer"
-;;             :category 'buffer
-;;             :narrow   ?o
-;;             :hidden   t
-;;             :face     'consult-buffer
-;;             :history  'buffer-name-history
-;;             :state    #'consult--buffer-state
-;;             :new
-;;             (lambda (name)
-;;               (with-current-buffer (get-buffer-create name)
-;;                 (insert "#+title: " name "\n\n")
-;;                 (org-mode)
-;;                 (consult--buffer-action (current-buffer))))
-;;             :items
-;;             (lambda ()
-;;               (mapcar #'buffer-name
-;;                       (if (featurep 'org)
-;;                           (org-buffer-list)
-;;                         (seq-filter
-;;                          (lambda (x)
-;;                            (eq (buffer-local-value 'major-mode x) 'org-mode))
-;;                          (buffer-list)))))))
-;;     (add-to-list 'consult-buffer-sources '+vertico--consult-org-source 'append))
+  ;; (when (modulep! :lang org)
+  ;;     (defvar +vertico--consult-org-source
+  ;;       (list :name     "Org Buffer"
+  ;;             :category 'buffer
+  ;;             :narrow   ?o
+  ;;             :hidden   t
+  ;;             :face     'consult-buffer
+  ;;             :history  'buffer-name-history
+  ;;             :state    #'consult--buffer-state
+  ;;             :new
+  ;;             (lambda (name)
+  ;;               (with-current-buffer (get-buffer-create name)
+  ;;                 (insert "#+title: " name "\n\n")
+  ;;                 (org-mode)
+  ;;                 (consult--buffer-action (current-buffer))))
+  ;;             :items
+  ;;             (lambda ()
+  ;;               (mapcar #'buffer-name
+  ;;                       (if (featurep 'org)
+  ;;                           (org-buffer-list)
+  ;;                         (seq-filter
+  ;;                          (lambda (x)
+  ;;                            (eq (buffer-local-value 'major-mode x) 'org-mode))
+  ;;                          (buffer-list)))))))
+  ;;     (add-to-list 'consult-buffer-sources '+vertico--consult-org-source 'append))
   )
 
 (use-package marginalia
@@ -154,12 +152,59 @@ folder, otherwise delete a word"
   :config
   (add-hook 'embark-collect-mode-hook #'consult-preview-at-point-mode))
 
-
 (use-package orderless
-  :init
-  (setq completion-styles '(orderless)
+  :defer 1
+  :config
+  (defadvice! +vertico--company-capf--candidates-a (fn &rest args)
+    "Highlight company matches correctly, and try default completion styles before
+orderless."
+    :around #'company-capf--candidates
+    (let ((orderless-match-faces [completions-common-part])
+          (completion-styles +vertico-company-completion-styles))
+      (apply fn args)))
+
+  (defun +vertico-orderless-dispatch (pattern _index _total)
+    (cond
+     ;; Ensure $ works with Consult commands, which add disambiguation suffixes
+     ((string-suffix-p "$" pattern)
+      `(orderless-regexp . ,(concat (substring pattern 0 -1) "[\x200000-\x300000]*$")))
+     ;; Ignore single !
+     ((string= "!" pattern) `(orderless-literal . ""))
+     ;; Without literal
+     ((string-prefix-p "!" pattern) `(orderless-without-literal . ,(substring pattern 1)))
+     ;; Character folding
+     ((string-prefix-p "%" pattern) `(char-fold-to-regexp . ,(substring pattern 1)))
+     ((string-suffix-p "%" pattern) `(char-fold-to-regexp . ,(substring pattern 0 -1)))
+     ;; Initialism matching
+     ((string-prefix-p "`" pattern) `(orderless-initialism . ,(substring pattern 1)))
+     ((string-suffix-p "`" pattern) `(orderless-initialism . ,(substring pattern 0 -1)))
+     ;; Literal matching
+     ((string-prefix-p "=" pattern) `(orderless-literal . ,(substring pattern 1)))
+     ((string-suffix-p "=" pattern) `(orderless-literal . ,(substring pattern 0 -1)))
+     ;; Flex matching
+     ((string-prefix-p "~" pattern) `(orderless-flex . ,(substring pattern 1)))
+     ((string-suffix-p "~" pattern) `(orderless-flex . ,(substring pattern 0 -1)))))
+  (add-to-list
+   'completion-styles-alist
+   '(+vertico-basic-remote
+     +vertico-basic-remote-try-completion
+     +vertico-basic-remote-all-completions
+     "Use basic completion on remote files only"))
+  (setq completion-styles '(orderless basic)
         completion-category-defaults nil
-        completion-category-overrides '((file (styles . (partial-completion))))))
+        ;; note that despite override in the name orderless can still be used in
+        ;; find-file etc.
+        completion-category-overrides '((file (styles +vertico-basic-remote orderless partial-completion)))
+        orderless-style-dispatchers '(+vertico-orderless-dispatch)
+        orderless-component-separator "[ &]")
+  ;; ...otherwise find-file gets different highlighting than other commands
+  (set-face-attribute 'completions-first-difference nil :inherit nil))
+
+;; (use-package orderless
+;;   :init
+;;   (setq completion-styles '(orderless)
+;;         completion-category-defaults nil
+;;         completion-category-overrides '((file (styles . (partial-completion))))))
 
 (use-package wgrep
   :commands wgrep-change-to-wgrep-mode

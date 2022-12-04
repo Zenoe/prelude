@@ -27,7 +27,8 @@
 (package-initialize)
 
 (defvar prelude-packages
-  '(ace-window
+  '(use-package
+    ace-window
     ag
     avy
     anzu
@@ -44,7 +45,6 @@
     gist
     git-timemachine
     git-modes
-    guru-mode
     hl-todo
     imenu-anywhere
     projectile
@@ -59,7 +59,8 @@
     which-key
     zenburn-theme
     zop-to-char
-    use-package
+    undo-fu ;; must come before evil
+    link-hint
     general ripgrep pcre2el better-jumper restart-emacs dumb-jump request
     )
   "A list of packages to ensure are installed at launch.")
@@ -69,11 +70,18 @@
   (cl-every #'package-installed-p prelude-packages))
 
 (defun prelude-require-package (package)
+
   "Install PACKAGE unless already installed."
   (unless (memq package prelude-packages)
     (add-to-list 'prelude-packages package))
   (unless (package-installed-p package)
-    (package-install package)))
+    (package-install package))
+  ;; (eval-when-compile
+  ;;   (unless (bound-and-true-p package--initialized)
+  ;;     (package-initialize))  ;; be sure load-path includes package directories
+  ;;   (require 'use-package)
+  ;;   )
+  )
 
 (defun prelude-require-packages (packages)
   "Ensure PACKAGES are installed.

@@ -30,7 +30,7 @@
 
 ;;; Code:
 
-(require 'prelude-programming)
+
 (prelude-require-package 'coffee-mode)
 
 (with-eval-after-load 'coffee-mode

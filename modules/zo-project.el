@@ -309,6 +309,3 @@ Relevant: `doom-project-hook'."
                  `((add-hook 'change-major-mode-after-body-hook #',fn)))))
             (match
              `((add-to-list 'auto-minor-mode-alist (cons ,match #',name)))))))))
-
-(provide 'zo-project)
-;;; doom-projects.el ends here

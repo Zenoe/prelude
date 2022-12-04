@@ -30,7 +30,7 @@
 
 ;;; Code:
 
-(require 'prelude-programming)
+
 (prelude-require-packages '(scala-mode lsp-mode))
 
 (defun prelude-scala-mode-defaults ()
