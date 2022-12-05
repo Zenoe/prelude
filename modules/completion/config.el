@@ -210,6 +210,38 @@ orderless."
   :commands wgrep-change-to-wgrep-mode
   :config (setq wgrep-auto-save-buffer t))
 
+(use-package consult-dir
+  :bind (([remap list-directory] . consult-dir)
+         :map vertico-map
+         ("C-x C-d" . consult-dir)
+         ;; not work on windows(7?), use consult-find underneath which in turn use find
+         ("C-x C-j" . consult-dir-jump-file))
+  :config
+  ;; (when (modulep! :tools docker)
+  ;;   (defun +vertico--consult-dir-docker-hosts ()
+  ;;     "Get a list of hosts from docker."
+  ;;     (when (require 'docker-tramp nil t)
+  ;;       (let ((hosts)
+  ;;             (docker-tramp-use-names t))
+  ;;         (dolist (cand (docker-tramp--parse-running-containers))
+  ;;           (let ((user (unless (string-empty-p (car cand))
+  ;;                         (concat (car cand) "@")))
+  ;;                 (host (car (cdr cand))))
+  ;;             (push (concat "/docker:" user host ":/") hosts)))
+  ;;         hosts)))
+  ;;   (defvar +vertico--consult-dir-source-tramp-docker
+  ;;     `(:name     "Docker"
+  ;;       :narrow   ?d
+  ;;       :category file
+  ;;       :face     consult-file
+  ;;       :history  file-name-history
+  ;;       :items    ,#'+vertico--consult-dir-docker-hosts)
+  ;;     "Docker candiadate source for `consult-dir'.")
+  ;;   (add-to-list 'consult-dir-sources '+vertico--consult-dir-source-tramp-docker t))
+
+  (add-to-list 'consult-dir-sources 'consult-dir--source-tramp-ssh t)
+  (add-to-list 'consult-dir-sources 'consult-dir--source-tramp-local t))
+
 (provide 'zo-vertico)
 
 ;;; zo-vertico.el ends here

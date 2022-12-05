@@ -25,8 +25,7 @@
                     )
                   )
                 (window-list-1 nil 0 t))))
-    (if ( not target-window )
-        (message "not find target window")
+    (when target-window
       (delete-window target-window)
       )
     )
